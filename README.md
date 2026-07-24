@@ -20,7 +20,7 @@ Every issue here is actively triaged. When something's fixed or a feature ships,
 
 ## A couple of things worth knowing
 
-- This repo is intentionally just an issue tracker — there's no source code here.
+- This repo is the public issue tracker for the RadEcho project.
 - If you're not on GitHub, no problem — the in-app form also takes just a name and email.
 
 Thanks for kicking the tires. 🌩️
