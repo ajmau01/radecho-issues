@@ -18,6 +18,10 @@ Prefer to write it up yourself? Feel free to open an issue directly on this repo
 
 Every issue here is actively triaged. When something's fixed or a feature ships, the issue gets closed with a note on what changed — so you can track status right from this page without needing any special access.
 
+## Notes & write-ups
+
+Deeper background on specific features and design decisions: [docs/notes.md](docs/notes.md)
+
 ## A couple of things worth knowing
 
 - This repo is the public issue tracker for the RadEcho project.
