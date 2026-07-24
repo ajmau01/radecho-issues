@@ -14,6 +14,10 @@ Why the two **Style** options in the viewer (Classic / Native) produce different
 
 Point-in-time snapshots of what shipped in a given session — written once and not kept up to date, so treat the date as "accurate as of," not "current state."
 
+### 2026-07-24 — [Sharper Native Rendering, Date Dropdown, Reliability Fixes](https://claude.ai/code/artifact/2a983f46-93af-4ec9-9134-99627bf4342e)
+
+Native (wedge) style now redraws gate edges at whatever zoom you're actually viewing instead of stretching a coarser image, with the edges themselves smoothed instead of stair-stepped. A date dropdown replaces free-text typing, and saved images/GIFs are named after the actual scan time shown. Also covers three real bugs found and fixed along the way — isolated "pepper" holes in solid storm cores, a clock that showed the wrong time while browsing an old frame, and a concurrency bug where loading several frames at once could briefly stall the app for everyone.
+
 ### 2026-07-22 — [RhoHV Filter, Save/Export, Toolbar Redesign](https://claude.ai/code/artifact/fb2c89ce-2f33-4faa-8af5-01d9246cf456)
 
 Two friend-requested features shipped together, plus a control-bar cleanup: a **Filter non-weather** toggle that reveals what RadEcho normally strips out (birds, insects, ground clutter — and genuine signal like wildfire smoke), one-click **Save image / Copy image / Save animated GIF**, and a reorganized toolbar grouped by Location/Display instead of one flat row. Also covers two real bugs found and fixed along the way (a stale-render toggle bug and a GIF export that could hang in a backgrounded tab).
