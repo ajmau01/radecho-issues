@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's New — RadEcho</title>
+<meta name="description" content="Recent updates to RadEcho, the hyper-local NEXRAD radar viewer.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon.ico">
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    color: #999;
+    font-size: 15px;
+    margin: 0;
+  }
+  header .links {
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header .links a {
+    font-size: 13px;
+    color: #8bc9a3;
+    text-decoration: none;
+    border: 1px solid #2f6f4f;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover {
+    background: #1c1c1c;
+    border-color: #4a9c70;
+  }
+  .entry {
+    padding: 28px 0;
+    border-top: 1px solid #2a2a2a;
+  }
+  .entry:first-of-type {
+    border-top: 1px solid #2a2a2a;
+  }
+  .entry .date {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    margin-bottom: 6px;
+  }
+  .entry h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    color: #f2f2f2;
+  }
+  .entry .lead {
+    font-size: 15px;
+    color: #ddd;
+    margin: 0 0 16px;
+  }
+  .feature {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .feature .icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #1c1c1c;
+    border: 1px solid #3a3a3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .feature .body strong {
+    display: block;
+    font-size: 14.5px;
+    color: #f2f2f2;
+    margin-bottom: 2px;
+  }
+  .feature .body span {
+    font-size: 14px;
+    color: #aaa;
+  }
+  .fixes {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+  }
+  .fixes .fixes-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  .fixes ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    color: #bbb;
+  }
+  .fixes li {
+    margin-bottom: 6px;
+  }
+  .fixes li:last-child {
+    margin-bottom: 0;
+  }
+  footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #2a2a2a;
+    font-size: 13px;
+    color: #777;
+  }
+  footer a {
+    color: #8bc9a3;
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>What's New in RadEcho</h1>
+    <p>A running log of updates to the radar viewer — written for people using it, not just the changelog.</p>
+    <div class="links">
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+      <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Report an issue</a>
+    </div>
+  </header>
+
+  <div class="entry">
+    <div class="date">August 2, 2026</div>
+    <h2>Auto-refresh: the radar now updates on its own</h2>
+    <p class="lead">
+      A tester asked for this directly: leave RadEcho open on a station and it'll pick up new
+      scans by itself, no manual reload needed.
+    </p>
+
+    <div class="feature">
+      <div class="icon">↻</div>
+      <div class="body">
+        <strong>New "Auto-refresh" checkbox</strong>
+        <span>Check it after loading a station and RadEcho quietly checks for a new scan about once a minute. When one lands, it just appears — if you're already looking at the latest frame, the view advances to the new one automatically; if you've scrubbed back to review an earlier frame, it leaves you right where you are and just makes the new frame available.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <div class="body">
+        <strong>Faster behind the scenes</strong>
+        <span>The server now keeps actively-watched stations' data warmed up in the background, so both auto-refresh and a plain manual reload come back much faster than before for anything you've looked at recently.</span>
+      </div>
+    </div>
+
+    <div class="fixes">
+      <div class="fixes-label">Also fixed this week</div>
+      <ul>
+        <li>Reloading a page used to zoom all the way in every time — it now lands on a more sensible starting zoom.</li>
+        <li>The "Save animated GIF" button no longer wraps its label onto two lines.</li>
+        <li>The "Report an issue" modal now actually closes after you submit, instead of sitting there.</li>
+        <li>The first load of the day for a station you'd been watching is fast again — a midnight-rollover edge case used to force a slow reload right after UTC midnight.</li>
+        <li>The browser tab finally has a real favicon instead of a blank one.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Curious about how any of this actually works under the hood? A few deeper write-ups live in
+    <a href="https://github.com/ajmau01/radecho-issues/blob/main/docs/notes.md">docs/notes.md</a>.
+    Found something broken? <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a> — it goes straight to the top of the list.
+  </footer>
+</div>
+</body>
+</html>
