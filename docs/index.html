@@ -293,6 +293,35 @@
     </div>
 
     <div class="feature">
+      <div class="icon">🧩</div>
+      <div class="body">
+        <strong>Loads appear all at once now, not tile by tile</strong>
+        <span>Previously a load could visibly pop in a piece at a time over several seconds, even though the server had already finished — that was purely how the pieces were being fetched, roughly 150 separate image requests per load. Now it's about 7. The picture appears as one unit; auto-refresh's own updates benefit from the same fix.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🎞️</div>
+      <div class="body">
+        <strong>Longer animation loops</strong>
+        <span>The Frames field now goes up to 20 (was 10) — loop back through close to two hours of history instead of about 50 minutes, useful for actually watching how a system's moving rather than just its last few scans.</span>
+      </div>
+    </div>
+
+    <div class="ui-preview">
+      <span class="field-label">Frames <select disabled><option>20</option></select></span>
+      <span class="field-label" style="color:#777;">(was capped at 10)</span>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🔍</div>
+      <div class="body">
+        <strong>Deeper zoom</strong>
+        <span>Zoom now goes noticeably further in — enough to frame in on your own neighborhood instead of just the wider metro area. Worth knowing: past a certain point you're not getting sharper storm detail (NEXRAD's own resolution tops out around 250m per pixel, same as always) — you're getting a tighter, closer-in view of the same data, which genuinely helps when something's bearing down on a specific spot.</span>
+      </div>
+    </div>
+
+    <div class="feature">
       <div class="icon">🎯</div>
       <div class="body">
         <strong>A real favicon</strong>
