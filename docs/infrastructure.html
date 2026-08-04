@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infrastructure — RadEcho</title>
+<meta name="description" content="How RadEcho is actually hosted: why it moved off a flaky home machine, the box it runs on now, and what that unlocked.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  header .title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  header .title-row img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    color: #999;
+    font-size: 15px;
+    margin: 0;
+  }
+  header .links {
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header .links a {
+    font-size: 13px;
+    color: #8bc9a3;
+    text-decoration: none;
+    border: 1px solid #2f6f4f;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover {
+    background: #1c1c1c;
+    border-color: #4a9c70;
+  }
+  section {
+    padding: 28px 0;
+    border-top: 1px solid #2a2a2a;
+  }
+  section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    color: #f2f2f2;
+  }
+  section p {
+    font-size: 15px;
+    color: #ddd;
+    margin: 0 0 14px;
+  }
+  section p:last-child {
+    margin-bottom: 0;
+  }
+  section p.sub {
+    font-size: 13.5px;
+    color: #999;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0 4px;
+  }
+  .stat {
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .stat .num {
+    font-size: 22px;
+    font-weight: 600;
+    color: #8bc9a3;
+    letter-spacing: -0.01em;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .kv {
+    margin: 16px 0 4px;
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 4px 18px;
+  }
+  .kv dl {
+    margin: 0;
+  }
+  .kv .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid #262626;
+    font-size: 14px;
+  }
+  .kv .row:first-child {
+    border-top: none;
+  }
+  .kv dt {
+    color: #999;
+    flex: 0 0 auto;
+  }
+  .kv dd {
+    margin: 0;
+    color: #eee;
+    text-align: right;
+  }
+  .feature {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .feature:last-child {
+    margin-bottom: 0;
+  }
+  .feature .icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #1c1c1c;
+    border: 1px solid #3a3a3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .feature .body strong {
+    display: block;
+    font-size: 14.5px;
+    color: #f2f2f2;
+    margin-bottom: 2px;
+  }
+  .feature .body span {
+    font-size: 14px;
+    color: #aaa;
+  }
+  .callout {
+    margin: 16px 0 4px;
+    padding: 14px 16px;
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid #2f6f4f;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #ccc;
+  }
+  footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #2a2a2a;
+    font-size: 13px;
+    color: #777;
+  }
+  footer a {
+    color: #8bc9a3;
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 24px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>What's Actually Running RadEcho</h1>
+    </div>
+    <p>The box behind the radar: why it moved, what it's made of, and what the extra horsepower buys the app.</p>
+    <div class="links">
+      <a href="index.html">← All pages</a>
+      <a href="whats-new.html">What's New →</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Why it moved</h2>
+    <p>
+      Through most of its life, RadEcho ran on an old ThinkCentre M93p sitting on a home Verizon
+      LTE hotspot. That held up fine day-to-day, but a two-night stretch at the end of July made
+      the cracks impossible to ignore: NOAA fetch timeouts, a Cloudflare Tunnel that kept dropping
+      because the connection itself was unreliable, and — the real culprit — <strong>two Wi-Fi
+      interfaces on the same machine fighting over the connection</strong>, which caused a roughly
+      12-hour outage. A first attempt at fixing it picked the wrong interface as primary and made
+      things worse, causing a second, ~16.5-hour outage the following night before it was sorted
+      out for good.
+    </p>
+    <p>
+      Nothing in that story was RadEcho's own code — it was the hosting. A friend, Tariq, had a
+      spare machine sitting idle and offered it up. RadEcho moved over for good on August 2, 2026.
+      The ThinkCentre is still intact as a cold fallback, but it's retired from active duty.
+    </p>
+  </section>
+
+  <section>
+    <h2>The box</h2>
+    <p>
+      A Dell Pro Micro Plus, running Windows 11 Pro with Ubuntu Linux inside via WSL2 — that's
+      where RadEcho's server actually lives and runs, same as it did on the ThinkCentre, just on
+      much stronger hardware and a real wired connection instead of a home hotspot.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num">14</div><div class="label">CPU cores</div></div>
+      <div class="stat"><div class="num">32GB</div><div class="label">RAM</div></div>
+      <div class="stat"><div class="num">1 Gbps</div><div class="label">wired connection</div></div>
+    </div>
+    <p class="sub">Intel Core Ultra 5 235 (14 cores / 14 threads) — a large step up from the ThinkCentre's aging, weak-per-core CPU, which was the main bottleneck on how fast a radar image could actually be rendered.</p>
+  </section>
+
+  <section>
+    <h2>How it's wired up</h2>
+    <p>RadEcho's server-side stack didn't change in this move — same Node/TypeScript app, same GDAL-based rasterization pipeline — only where it runs.</p>
+    <div class="kv">
+      <dl>
+        <div class="row"><dt>OS</dt><dd>Ubuntu 26.04 (inside WSL2)</dd></div>
+        <div class="row"><dt>Runtime</dt><dd>Node.js 20.19.6</dd></div>
+        <div class="row"><dt>Rasterization</dt><dd>GDAL 3.12.2</dd></div>
+        <div class="row"><dt>Process manager</dt><dd>systemd, auto-restart on crash</dd></div>
+        <div class="row"><dt>Public ingress</dt><dd>Cloudflare Tunnel — no open inbound ports</dd></div>
+        <div class="row"><dt>Admin access</dt><dd>SSH over the same Cloudflare Access gate</dd></div>
+      </dl>
+    </div>
+    <div class="feature">
+      <div class="icon">🔁</div>
+      <div class="body">
+        <strong>Survives a Windows reboot on its own</strong>
+        <span>A Windows Task Scheduler job keeps the Linux side alive across restarts — genuinely tricky to get right (WSL2 tears itself down the moment nothing's actively holding it open), but confirmed working with a real hands-off reboot test.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🚦</div>
+      <div class="body">
+        <strong>Deploys can't silently ship the wrong thing</strong>
+        <span>A new deploy script only ever deploys an exact, named point in git history — never whatever happens to be sitting on a laptop's disk — and runs the full lint/test suite before anything touches the live service. A bad deploy gets stopped before it goes live, not after.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the extra horsepower buys</h2>
+    <p>
+      RadEcho renders radar images in parallel across a pool of background workers. On the
+      ThinkCentre, that pool was capped at 2, later cautiously raised to 4 — its weaker CPU
+      couldn't safely go further. On the new box, real load tests (not guesses) found the actual
+      ceiling:
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num">23s</div><div class="label">4 workers</div></div>
+      <div class="stat"><div class="num">16s</div><div class="label">8 workers</div></div>
+      <div class="stat"><div class="num">13s</div><div class="label">10 workers</div></div>
+    </div>
+    <p class="sub">Time for 5 friends to load 5 different stations at once, cold (nothing cached). Pushing past 10 workers (tested up to 14) made no further difference — at that point NOAA's own data-fetch speed, not this box's CPU, is what's actually limiting things.</p>
+  </section>
+
+  <section>
+    <h2>What's shipped since the move</h2>
+    <p>The stronger, more reliable box is what made this run of features possible in the first place — most of it is the kind of thing that's risky to build on hardware that might fall over under real concurrent load.</p>
+    <div class="feature">
+      <div class="icon">↻</div>
+      <div class="body">
+        <strong>Auto-refresh</strong>
+        <span>Leave a station open and RadEcho quietly picks up new scans on its own — backed by continuous background prefetching that keeps actively-watched stations warm.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🧩</div>
+      <div class="body">
+        <strong>Tile batching</strong>
+        <span>~200 individual image requests per load collapsed to about 7 — loads now appear as one unit instead of visibly popping in piece by piece.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🎞️</div>
+      <div class="body">
+        <strong>Longer, deeper loops</strong>
+        <span>Animation length raised from 10 to 20 frames, zoom raised well past its old ceiling — both were previously capped partly out of caution about per-request load.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🧵</div>
+      <div class="body">
+        <strong>A real rendering bug fixed at long range</strong>
+        <span>The Native (wedge) style could silently drop a real band of radar data — sometimes tens of kilometers wide — at the edges of a tile, wherever the station sat close to a tile's edge rather than its corner. Root-caused, fixed, and the underlying alignment test tightened so it can't quietly regress.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🎯</div>
+      <div class="body">
+        <strong>A new look</strong>
+        <span>Both the browser-tab favicon and a matching logo in the app's own header — new icon, first time RadEcho has had real matching branding.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    The user-facing version of most of the above — screenshots, plain-language explanations — lives on
+    <a href="whats-new.html">What's New</a>. Deeper technical write-ups: <a href="https://github.com/ajmau01/radecho-issues/blob/main/docs/notes.md">docs/notes.md</a>.
+    Found something broken? <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>

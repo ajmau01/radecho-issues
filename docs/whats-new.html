@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's New — RadEcho</title>
+<meta name="description" content="Recent updates to RadEcho, the hyper-local NEXRAD radar viewer.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  header .title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  header .title-row img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    color: #999;
+    font-size: 15px;
+    margin: 0;
+  }
+  header .links {
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header .links a {
+    font-size: 13px;
+    color: #8bc9a3;
+    text-decoration: none;
+    border: 1px solid #2f6f4f;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover {
+    background: #1c1c1c;
+    border-color: #4a9c70;
+  }
+  .entry {
+    padding: 28px 0;
+    border-top: 1px solid #2a2a2a;
+  }
+  .entry:first-of-type {
+    border-top: 1px solid #2a2a2a;
+  }
+  .entry .date {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    margin-bottom: 6px;
+  }
+  .entry h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    color: #f2f2f2;
+  }
+  .entry .lead {
+    font-size: 15px;
+    color: #ddd;
+    margin: 0 0 16px;
+  }
+  .feature {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .feature .icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #1c1c1c;
+    border: 1px solid #3a3a3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .feature .body strong {
+    display: block;
+    font-size: 14.5px;
+    color: #f2f2f2;
+    margin-bottom: 2px;
+  }
+  .feature .body span {
+    font-size: 14px;
+    color: #aaa;
+  }
+  .fixes {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: #171717;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+  }
+  .fixes .fixes-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  .fixes ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    color: #bbb;
+  }
+  .fixes li {
+    margin-bottom: 6px;
+  }
+  .fixes li:last-child {
+    margin-bottom: 0;
+  }
+  footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #2a2a2a;
+    font-size: 13px;
+    color: #777;
+  }
+  footer a {
+    color: #8bc9a3;
+  }
+  .ui-preview {
+    margin: 12px 0 4px;
+    padding: 14px 16px;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .ui-preview .field-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #ccc;
+    white-space: nowrap;
+  }
+  .ui-preview .field-checkbox input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #0a84ff;
+  }
+  .ui-preview .field-checkbox.highlight {
+    color: #eee;
+    font-weight: 500;
+  }
+  .ui-preview .field-label {
+    font-size: 13px;
+    color: #aaa;
+    white-space: nowrap;
+  }
+  .ui-preview .field-label select {
+    background: #1c1c1c;
+    color: #eee;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 13px;
+  }
+  .ui-preview .divider {
+    width: 1px;
+    height: 18px;
+    background: #333;
+  }
+  .ui-caption {
+    font-size: 12px;
+    color: #777;
+    margin: 8px 0 0;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-row .ui-btn {
+    background: #1c1c1c;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .tab-mock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #2b2b2b;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px 8px 0 0;
+    padding: 9px 18px 9px 12px;
+    font-size: 13px;
+    color: #ddd;
+  }
+  .tab-mock img {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+  }
+  .favicon-block {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 12px 0 4px;
+  }
+  .favicon-large {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    padding: 8px;
+    flex: 0 0 auto;
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 24px; }
+    .favicon-block { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>What's New in RadEcho</h1>
+    </div>
+    <p>A running log of updates to the radar viewer — written for people using it, not just the changelog.</p>
+    <div class="links">
+      <a href="index.html">← All pages</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+      <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Report an issue</a>
+    </div>
+  </header>
+
+  <div class="entry">
+    <div class="date">August 3, 2026</div>
+    <h2>Zoom no longer drifts away from the location you searched for</h2>
+    <p class="lead">
+      A tester centered the map on their house and found that zooming — especially pinching, the
+      way almost everyone zooms on a phone — would gradually carry the view somewhere else
+      entirely. Fixed, along with the button that was supposed to get you back.
+    </p>
+
+    <div class="feature">
+      <div class="icon">🎯</div>
+      <div class="body">
+        <strong>Zoom now stays anchored to your search</strong>
+        <span>Pinching, the +/- buttons, mouse wheel, and a quick two-finger tap all zoom in and out on the location you actually searched for — they can no longer walk the view away from it, no matter how many times you zoom in a row.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">↩️</div>
+      <div class="body">
+        <strong>"Reset view" actually resets the view now</strong>
+        <span>It used to either keep whatever drift had already happened or jump to the radar station's own location instead of yours. It now genuinely returns you to the exact spot you searched for.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">👆</div>
+      <div class="body">
+        <strong>Still want to look somewhere else? Double-click or double-tap.</strong>
+        <span>That's unchanged — a deliberate double-click (or double-tap on mobile) still zooms in on exactly wherever you clicked, for exploring a different area without needing to search a new location first.</span>
+      </div>
+    </div>
+
+    <div class="ui-preview">
+      <span class="ui-btn" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;">
+        <svg width="16" height="16" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="none" stroke="#fff" stroke-width="1.6"/><line x1="10" y1="1" x2="10" y2="19" stroke="#fff" stroke-width="1.6"/><line x1="1" y1="10" x2="19" y2="10" stroke="#fff" stroke-width="1.6"/></svg>
+      </span>
+      <span class="ui-btn" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;">
+        <svg width="16" height="16" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="none" stroke="#fff" stroke-width="1.6"/><line x1="1" y1="10" x2="19" y2="10" stroke="#fff" stroke-width="1.6"/></svg>
+      </span>
+    </div>
+    <p class="ui-caption">The zoom buttons also got a small crosshair-styled icon, as a visual reminder of what they're anchored to.</p>
+  </div>
+
+  <div class="entry">
+    <div class="date">August 3, 2026</div>
+    <h2>A clearer way to pick how many frames</h2>
+    <p class="lead">
+      Small polish: the Frames field is now a dropdown instead of a free-typing number box.
+    </p>
+
+    <div class="feature">
+      <div class="icon">📋</div>
+      <div class="body">
+        <strong>Frames is now a preset dropdown</strong>
+        <span>Previously you could type any number, but anything past 20 silently got capped without telling you. Now it's a straightforward dropdown — 3, 6, 10, 15, or 20 — so the actual range is obvious instead of something you'd only discover by hitting it.</span>
+      </div>
+    </div>
+
+    <div class="ui-preview">
+      <span class="field-label">Frames <select disabled><option>3</option><option selected>6</option><option>10</option><option>15</option><option>20</option></select></span>
+    </div>
+    <p class="ui-caption">Same spot in the Display row — now a dropdown instead of a number field.</p>
+  </div>
+
+  <div class="entry">
+    <div class="date">August 2, 2026</div>
+    <h2>Auto-refresh: the radar now updates on its own</h2>
+    <p class="lead">
+      A tester asked for this directly: leave RadEcho open on a station and it'll pick up new
+      scans by itself, no manual reload needed.
+    </p>
+
+    <div class="feature">
+      <div class="icon">↻</div>
+      <div class="body">
+        <strong>New "Auto-refresh" checkbox</strong>
+        <span>Check it after loading a station and RadEcho quietly checks for a new scan about once a minute. When one lands, it just appears — if you're already looking at the latest frame, the view advances to the new one automatically; if you've scrubbed back to review an earlier frame, it leaves you right where you are and just makes the new frame available.</span>
+      </div>
+    </div>
+
+    <div class="ui-preview">
+      <span class="field-label">Frames <select disabled><option>6</option></select></span>
+      <span class="field-label">Style <select disabled><option>Native</option></select></span>
+      <label class="field-checkbox"><input type="checkbox" checked disabled> Filter non-weather</label>
+      <div class="divider"></div>
+      <label class="field-checkbox highlight"><input type="checkbox" checked disabled> Auto-refresh</label>
+    </div>
+    <p class="ui-caption">The Display row in the toolbar — new checkbox on the right.</p>
+
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <div class="body">
+        <strong>Faster behind the scenes</strong>
+        <span>The server now keeps actively-watched stations' data warmed up in the background, so both auto-refresh and a plain manual reload come back much faster than before for anything you've looked at recently.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🧩</div>
+      <div class="body">
+        <strong>Loads appear all at once now, not tile by tile</strong>
+        <span>Previously a load could visibly pop in a piece at a time over several seconds, even though the server had already finished — that was purely how the pieces were being fetched, roughly 150 separate image requests per load. Now it's about 7. The picture appears as one unit; auto-refresh's own updates benefit from the same fix.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🎞️</div>
+      <div class="body">
+        <strong>Longer animation loops</strong>
+        <span>The Frames field now goes up to 20 (was 10) — loop back through close to two hours of history instead of about 50 minutes, useful for actually watching how a system's moving rather than just its last few scans.</span>
+      </div>
+    </div>
+
+    <div class="ui-preview">
+      <span class="field-label">Frames <select disabled><option>20</option></select></span>
+      <span class="field-label" style="color:#777;">(was capped at 10)</span>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🔍</div>
+      <div class="body">
+        <strong>Deeper zoom</strong>
+        <span>Zoom now goes noticeably further in — enough to frame in on your own neighborhood instead of just the wider metro area. Worth knowing: past a certain point you're not getting sharper storm detail (NEXRAD's own resolution tops out around 250m per pixel, same as always) — you're getting a tighter, closer-in view of the same data, which genuinely helps when something's bearing down on a specific spot.</span>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🎯</div>
+      <div class="body">
+        <strong>A real favicon</strong>
+        <span>The browser tab has an actual icon now instead of a blank page — a small radar sweep, dark to match the app.</span>
+      </div>
+    </div>
+
+    <div class="favicon-block">
+      <img class="favicon-large" src="img/favicon.svg" alt="RadEcho favicon: a dark circle with a green radar sweep wedge">
+      <div class="tab-mock">
+        <img src="img/favicon.svg" alt="">
+        RadEcho viewer
+      </div>
+    </div>
+    <p class="ui-caption">The actual icon file, and roughly how it looks sitting in a browser tab.</p>
+
+    <div class="fixes">
+      <div class="fixes-label">Also fixed this week</div>
+      <ul>
+        <li>Reloading a page used to zoom all the way in every time — it now lands on a more sensible starting zoom.</li>
+        <li>
+          The "Save animated GIF" button no longer wraps its label onto two lines.
+          <div class="btn-row" style="margin-top: 8px;">
+            <span class="ui-btn">Save image</span>
+            <span class="ui-btn">Copy image</span>
+            <span class="ui-btn">Save animated GIF</span>
+          </div>
+        </li>
+        <li>The "Report an issue" modal now actually closes after you submit, instead of sitting there.</li>
+        <li>The first load of the day for a station you'd been watching is fast again — a midnight-rollover edge case used to force a slow reload right after UTC midnight.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Curious about how any of this actually works under the hood? A few deeper write-ups live in
+    <a href="https://github.com/ajmau01/radecho-issues/blob/main/docs/notes.md">docs/notes.md</a>.
+    Found something broken? <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a> — it goes straight to the top of the list.
+  </footer>
+</div>
+</body>
+</html>
