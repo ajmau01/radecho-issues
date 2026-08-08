@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holes In The Storms — The Blast Radius</title>
+<meta name="description" content="Why RadEcho punched black holes through solid precipitation, the twelve attempts that failed to fix it, and the realization that made the problem disappear instead.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  pre {
+    background: #171717; border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 16px 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: 12.5px; line-height: 1.6; color: #cfe6d8; }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: #171717; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .stat .num { font-size: 21px; font-weight: 600; color: #8bc9a3; letter-spacing: -0.01em; }
+  .stat .label { font-size: 12px; color: #999; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #262626; }
+  th { color: #999; font-weight: 500; font-size: 13px; }
+  td { color: #ddd; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 23px; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>Holes In The Storms</h1>
+    </div>
+    <p>Why RadEcho punched black gaps through solid precipitation, the twelve attempts that failed to fix it, and the realization that made the problem disappear instead of shrink.</p>
+    <div class="meta">The Blast Radius · 8 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="whats-new.html">What's New →</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>The symptom</h2>
+    <p>
+      The most persistent defect report against RadEcho has been that storms render chewed up. Black streaks
+      through the middle of solid cells. Pepper holes in a rain shield that has no business having holes in it.
+      Zoomed in on a strong core, the field looks moth-eaten.
+    </p>
+    <p>
+      For months the working assumption was that this was a tuning problem — that some threshold was slightly
+      wrong and the right constant would close the gaps. That assumption was wrong, and it cost about a dozen
+      failed attempts to establish it. What follows is the whole chain: what the holes actually were, why every
+      obvious fix failed, what finally worked, and why the current build is sound in a way the previous ones
+      structurally could not be.
+    </p>
+    <p>
+      It gets into the weeds, deliberately.
+    </p>
+  </section>
+
+  <section>
+    <h2>What the radar actually produces</h2>
+    <p>
+      A WSR-88D transmits a pulse and listens. From the returned signal the site processor computes a set of
+      <em>moments</em> — one number per gate, where a gate is a single range bin along a single beam direction,
+      roughly 250 m deep and one degree wide.
+    </p>
+    <p>
+      The one everybody knows is <strong>reflectivity</strong> (dBZ) — how much power came back, loosely how
+      much stuff is up there. Since the 2012 dual-pol upgrade there are also polarimetric moments, and those
+      are where this story lives. The radar transmits and receives on both horizontal and vertical
+      polarization, then compares the two returns:
+    </p>
+    <ul>
+      <li>
+        <strong>Z<sub>DR</sub></strong> (differential reflectivity) — is the target wider than it is tall?
+        Large raindrops flatten as they fall, so rain runs slightly positive. Insects run <em>very</em>
+        positive, which turns out to matter later.
+      </li>
+      <li>
+        <strong>&rho;<sub>HV</sub></strong> (correlation coefficient) — do the H and V returns agree with each
+        other, pulse pair to pulse pair? A volume full of raindrops, all roughly the same shape, gives a very
+        high correlation, 0.98 and up. A jumble of different shapes — bugs, birds, a hillside, tumbling hail —
+        decorrelates, and the number drops.
+      </li>
+    </ul>
+    <p>
+      &rho;<sub>HV</sub> looks like a beautiful discriminator. Rain is uniform, junk is not, so junk has low
+      correlation. That framing is what caused the trouble.
+    </p>
+  </section>
+
+  <section>
+    <h2>The original sin: a threshold</h2>
+    <p>
+      RadEcho's filter was one line of intent: <strong>if a gate's &rho;<sub>HV</sub> is below 0.95, don't draw
+      it.</strong> That is where the holes came from. Every black gap in the display was a gate that had a
+      perfectly good reflectivity reading and got deleted because a second measurement said the scatterers in
+      that volume weren't uniform enough.
+    </p>
+    <p>
+      There was a reason for it. Early on, the app displayed convincing-looking storms that weren't there — a
+      real problem, particularly on the clear-air scan patterns, where the radar is looking at an empty sky and
+      every bug and inversion layer shows up. The filter was the fix for that, and it worked for that.
+    </p>
+    <p>
+      The trouble is that thresholding is binary and per-gate, and it has no idea <em>why</em> a given gate's
+      correlation is low.
+    </p>
+  </section>
+
+  <section>
+    <h2>Why a single threshold can never work</h2>
+    <p>
+      Here is the part that took an embarrassingly long time to internalize. The published operational
+      literature — the same hydrometeor classification work the NWS uses — puts ground clutter and anomalous
+      propagation in a &rho;<sub>HV</sub> range of roughly <strong>0.5 to 0.95</strong>. It puts heavy rain at
+      roughly <strong>0.92 to 1.0</strong>.
+    </p>
+    <p>
+      Those overlap. Not at the edges — meaningfully. Which means no threshold anywhere on that axis cleanly
+      separates the two populations. Set the cut low and clutter survives; set it high and real rain starts
+      disappearing. No value does both, because the quantity being measured doesn't carry enough information to
+      make the call on its own.
+    </p>
+    <div class="callout">
+      It is the same shape as squelching on signal strength alone. A squelch level can be set to kill the
+      noise, or set to let weak stations through, but where the two overlap in level no setting does both.
+      Separating them requires a second axis — something about the <em>character</em> of the signal rather than
+      its magnitude.
+    </div>
+    <p>
+      And crucially, real weather drops below 0.95 for reasons that have nothing to do with clutter:
+    </p>
+    <h3>Non-uniform beam filling</h3>
+    <p>
+      The main lobe is about one degree wide. At 200 km that's roughly <strong>3.5 km across</strong>. If the
+      storm fills only part of that volume, the sample averages returns from precipitation and empty air
+      together, and the H and V returns decorrelate — not because the rain is unusual, but because one number
+      is being asked to describe a heterogeneous volume. This is the dominant cause of long-range holes, and it
+      worsens with range, exactly where the beam is widest.
+    </p>
+    <h3>The melting layer</h3>
+    <p>
+      Half-melted snowflakes are genuinely irregular — wet, aggregated, tumbling. Correlation legitimately
+      craters. That's the bright band, and it's real weather.
+    </p>
+    <h3>Hail and mixed phase</h3>
+    <p>
+      Tumbling irregular ice in the strongest part of the strongest storms. Low &rho;<sub>HV</sub> is the
+      <em>signature</em> of hail, and the filter was treating it as grounds for erasing the core.
+    </p>
+    <p>
+      So the holes weren't a bug in the implementation. They were what the approach does.
+    </p>
+  </section>
+
+  <section>
+    <h2>Twelve attempts, and the pattern in the failures</h2>
+    <p>
+      The obvious response is to stop deleting on &rho;<sub>HV</sub> alone and add a second condition that
+      recognizes real weather and spares it. That is exactly what was attempted, repeatedly, and the trail is
+      worth reading because the failures rhyme.
+    </p>
+    <ul>
+      <li><strong>Spatial extent.</strong> Real storms are broad, clutter is point-like. Held up on two cases,
+        then a confirmed anomalous-propagation cluster turned out to be broader than two confirmed real ones.</li>
+      <li><strong>Reflectivity floor.</strong> Only rescue gates above some dBZ. Found a live counter-example
+        the same night: three stations reading 45–54 dBZ with zero real precipitation anywhere near them.</li>
+      <li><strong>Whole-population persistence.</strong> Clutter sits still, storms move. Broke on the second
+        round of data — a fake station's scattered point sources moved around as much as a real storm.</li>
+      <li><strong>Short-window displacement.</strong> Broke immediately.</li>
+      <li><strong>Simple recurrence.</strong> Clean for 45 minutes, then a real multi-cell cluster regenerating
+        over the same terrain-favored spot did exactly what clutter does.</li>
+      <li><strong>Occupancy fraction.</strong> The best of the lot — one fake station sat at 100% presence over
+        2.5 hours while real cases topped out near 47%. Then a second fake station scored 53% and an actively
+        flooding real storm scored 100%.</li>
+      <li><strong>Reflectivity texture, then Z<sub>DR</sub>, then both together.</strong> Medians overlapped
+        completely. On one run the <em>fake</em> station had the smoothest texture of all seven.</li>
+      <li><strong>&Phi;<sub>DP</sub> texture</strong>, after building the plumbing to read a moment the
+        pipeline had never parsed. Real signal on two stations, indistinguishable on a third that shared the same scan pattern.</li>
+      <li><strong>A faithful multi-variable classifier</strong> combining the lot. Real stations scored
+        0.222–0.320. Fake stations scored 0.222–0.333. One fake station scored identically to two real ones.</li>
+    </ul>
+    <div class="callout warn">
+      <strong>The pattern:</strong> every single one of those was a different statistic computed on the same
+      measurement. Twelve ways of asking &rho;<sub>HV</sub> and its neighbors the same question, and getting
+      twelve versions of the same shrug. Each looked clean on two or three cases and broke on the next check —
+      often enough that "clean on n=3" stopped being evidence of anything.
+    </div>
+  </section>
+
+  <section>
+    <h2>What finally worked</h2>
+    <p>
+      The breakthrough was reading what the WSR-88D fleet <em>actually</em> uses to find clutter, which turns
+      out not to be a hydrometeor classifier at all. It is <strong>CMD</strong> — Clutter Mitigation Decision —
+      and it works on a completely different axis:
+    </p>
+    <ul>
+      <li><strong>TDBZ</strong> — how much reflectivity jumps from one gate to the next along a single radial.</li>
+      <li><strong>SPIN</strong> — how often it reverses direction, up-down-up-down, over that same run.</li>
+      <li>Plus the standard deviation of Z<sub>DR</sub> and &Phi;<sub>DP</sub> over a short window.</li>
+    </ul>
+    <p>
+      Not "how strong is this return" but <strong>"how ragged is it."</strong> Rain, even heavy rain, is
+      spatially smooth at 250 m resolution — move one gate over and the value barely changes. A hillside, a
+      tower, a scattering of ground targets produces a signal that slams up and down gate to gate, because the
+      sample is hitting discrete hard objects rather than a medium.
+    </p>
+    <div class="callout">
+      The most satisfying detail: CMD's designers evaluated &rho;<sub>HV</sub> as an input and
+      <strong>explicitly discarded it</strong> as not useful for this decision. Twelve rounds of empirical
+      failure, independently confirming a design decision published in 2009.
+    </div>
+    <p>
+      Two additions made it work in practice. A gate that fails the correlation test gets restored if CMD says
+      it isn't ragged — but only if <strong>Z<sub>DR</sub> is under 3.0 dB</strong>, which is the biological
+      ceiling. Insects are wildly oblate; CMD alone happily restored 12–24% of an insect bloom because bugs are
+      spatially <em>smooth</em>. The Z<sub>DR</sub> ceiling collapses that to well under 1% while keeping
+      93–97% of the genuine restorations.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num">38 pts</div><div class="label">separation between confirmed-real and confirmed-fake stations</div></div>
+      <div class="stat"><div class="num">0</div><div class="label">station-level overlap across 11 ground-truthed cases</div></div>
+      <div class="stat"><div class="num">+1,584 / −0</div><div class="label">pixels added vs removed on a measured before/after</div></div>
+    </div>
+    <p>
+      That last number is the one that mattered: rendering the same volume with the rescue off and on added
+      1,584 pixels and removed none, with 95.6% of the additions directly adjacent to existing echo. Genuine
+      fill-in of holes punched through solid precipitation, not new echo invented in clear air.
+    </p>
+  </section>
+
+  <section>
+    <h2>And then the realization that made all of it beside the point</h2>
+    <p>
+      Somewhere in the middle of this, an obvious question finally got asked: how does RadarScope handle this?
+    </p>
+    <p>
+      It doesn't. RadarScope shows Level II reflectivity essentially as the radar produced it, and offers
+      correlation coefficient as a <em>separate product</em> — a layer to be inspected, never a mask that
+      erases anything. WeatherFront's entire reflectivity control is a user-set minimum dBZ, adjustable from
+      −10 to +40, plus a smoothing selector. No dual-pol quality control on reflectivity at all.
+    </p>
+    <p>
+      Neither of them has this problem because neither of them does this thing. And there's a reason it works
+      out for them, which is the genuinely important piece of physics in this whole story.
+    </p>
+    <h3>The radar already cleaned itself, and it did it properly</h3>
+    <p>
+      The site processor removes ground clutter <strong>before reflectivity is ever computed</strong>. It does
+      it in the frequency domain, on the raw I/Q: ground doesn't move, so its return sits at essentially zero
+      Doppler, and the processor notches out that spectral component while leaving the weather's spread-out
+      spectrum intact.
+    </p>
+    <div class="callout">
+      It is, functionally, a notch filter at DC. And because it operates on the spectrum, it removes the
+      clutter's <em>contribution</em> to a gate rather than removing the gate. A range bin containing both a
+      hillside and rain comes out the other side with the rain still in it.
+    </div>
+    <p>
+      RadEcho cannot do that. It receives finished moments, not I/Q. By the time the data arrives, clutter and
+      weather have already been summed into one number per gate, and the only lever left is deleting the whole
+      gate.
+    </p>
+    <p>
+      <strong>The site processor filters before the measurement exists; RadEcho was thresholding after
+      it.</strong> The first is surgical. The second is a hole punch. No amount of cleverness in the second
+      closes that gap, because the information needed to be surgical was discarded upstream.
+    </p>
+  </section>
+
+  <section>
+    <h2>So RadEcho stopped deleting things</h2>
+    <p>
+      The current build does not remove non-weather from the default view. It <strong>labels</strong> it.
+    </p>
+    <table>
+      <tr><th>Rendered as</th><th>What it means</th></tr>
+      <tr><td><span class="swatch" style="background:#4b4b52"></span>Slate grey</td><td>Biological — insects, birds. Tagged by Z<sub>DR</sub> at or above 3.0 dB.</td></tr>
+      <tr><td><span class="swatch" style="background:#8c644b"></span>Earthy brown</td><td>Ground clutter or anomalous propagation. Failed the correlation test <em>and</em> scored ragged on CMD.</td></tr>
+      <tr><td>Normal dBZ ramp</td><td>Everything else, including gates that failed the correlation test but read as smooth.</td></tr>
+    </table>
+    <p>
+      This is the part worth being precise about, because it carries the whole argument:
+    </p>
+    <div class="callout">
+      <strong>The holes are gone by construction, not by tuning.</strong> There is no threshold left in the
+      default path that can delete a gate. Nothing to get slightly wrong, no constant that has to be right for
+      a storm to render intact. The gaps didn't get smaller — the mechanism that produced them is no
+      longer in the picture.
+    </div>
+    <p>
+      A second-order point matters just as much. <strong>Deleting hides its own mistakes.</strong>
+      If a classifier is wrong some fraction of the time and its response is to erase the gate, the evidence is
+      destroyed and nobody ever learns. Colouring it means a wrong call costs a wrong colour — the echo is
+      still there, still positioned, still arguable. The classifier reports on itself, in production, in the
+      open.
+    </p>
+    <p>
+      Put another way: <strong>absence is the one error that cannot be audited.</strong> A false echo can be
+      examined and discounted. A hole asserts "there is nothing here," which is a factual claim, and when it is
+      wrong there is nothing left to notice.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's still wrong, told straight</h2>
+    <p>
+      These are all visible in the current build. None are hidden, and all are the kind of thing that gets
+      iterated on.
+    </p>
+
+    <h3>There is a wind farm rendering as a severe thunderstorm</h3>
+    <p>
+      At 42.4154, −79.2283 — the escarpment above Fredonia, New York, about 72 km from the Buffalo radar —
+      there is a persistent 50 dBZ return that never moves. Over 15 consecutive volumes spanning 90 minutes,
+      of <strong>3,576</strong> gates that touched 45 dBZ at least once, exactly <strong>one</strong> held it
+      in every single volume. That one.
+    </p>
+    <p>
+      It's almost certainly the Arkwright Summit turbine array, and the reason it's there is a genuinely
+      elegant failure:
+    </p>
+    <div class="callout warn">
+      Turbine blades <strong>move</strong>. The site processor's clutter filter works by notching out
+      near-zero Doppler. Spinning blades aren't near-zero Doppler, so they sail straight through the one filter
+      specifically designed to catch ground returns. Then they read &rho;<sub>HV</sub> = <strong>0.985</strong>,
+      which clears the threshold comfortably, so they never even reach the clutter classifier.
+    </div>
+    <p>
+      Nothing in the current build catches this. Not the correlation test, not CMD, not the height guard below.
+      It renders as weather in every view. Wind turbine clutter is a known, documented, unsolved problem across
+      the operational community — forecasters are trained to recognize it rather than expect it removed.
+    </p>
+
+    <h3>Terrain that lights up when a storm goes over it</h3>
+    <p>
+      Southeast of Fredonia, the Chautauqua escarpment rises hard off the lake plain. It produces a persistent
+      brown patch — correctly labelled, it really is ground. What's interesting is that the patch grows
+      noticeably when a storm passes overhead.
+    </p>
+    <p>
+      That isn't the hills changing. A thunderstorm's cold pool spreads a layer of cool, moist air near the
+      surface, which creates a refractive gradient that bends the beam <em>downward</em>. Terrain the beam
+      normally passes over gets clipped, and the return jumps.
+    </p>
+    <div class="callout">
+      This is tropospheric ducting — the same superrefraction behind improbable VHF and UHF DX on a humid
+      summer evening. Desirable in one context, a nuisance in this one. The geometry here is unusually
+      marginal: at 72 km the beam bottom sits around 349 m above the radar, and the escarpment tops out around
+      340–380 m above the same reference. It is grazing the ridge, and a fraction of a degree of extra bending
+      is the difference between passing over and hitting.
+    </div>
+
+    <h3>Deep convection at long range sometimes gets called clutter</h3>
+    <p>
+      CMD scores raggedness, and hail is genuinely ragged. A hail-bearing core 200+ km out, where the beam is
+      several kilometres wide and only partly filled, produces exactly the texture signature CMD was built to
+      flag. So brown streaks occasionally appear through real storm cores at extreme range.
+    </p>
+    <p>
+      One case of this got a targeted fix worth mentioning, because the bug is funny in hindsight. CMD is a
+      pure texture calculation — it has no idea how far away a gate is. So it was cheerfully labelling returns
+      "ground clutter" at ranges where, thanks to earth curvature, the beam is kilometres above any ground:
+    </p>
+<pre><code>Bracebridge, Ontario — 237 km from KBUF, 0.5° tilt
+
+  beam centre = 237 km · sin(0.5°)  +  237² / (2 · 8500)
+              = 2,064 m  +  3,290 m   =  5,354 m above the radar
+  beam width  ≈ 3.8 km at that range
+  → sampled volume spans roughly 3.7 – 7.5 km above sea level</code></pre>
+    <p>
+      The earth has curved away by more than three kilometres beneath the beam. There is no ground in that
+      volume. So the current build refuses to apply the ground-clutter label above 3 km above radar level —
+      which, at the lowest tilt, kicks in past about 165–185 km depending on the exact elevation angle. Below
+      that, nothing changed at all: on the verification volume, clutter labels inside 160 km were
+      <strong>identical</strong> before and after (15,222 gates), while beyond 160 km they dropped from 1,043
+      to 98.
+    </p>
+    <p>
+      That residual 98 is real ground clutter at range, correctly labelled. The ~945 that went away were storms
+      being called dirt.
+    </p>
+  </section>
+
+  <section>
+    <h2>Why the current build is sound</h2>
+    <p>
+      For the specific defect — holes through storms — the answer rests on structure rather than tuning. The
+      default view has no delete step at all. The threshold that produced the holes still exists in the
+      codebase, but only runs for someone who deliberately opts into it via the control beside the legend.
+    </p>
+    <p>
+      Concretely, on a real Albany volume from the afternoon this shipped:
+    </p>
+<pre><code>Hide low-confidence returns ON  (the old behaviour)
+    grey  13,316 px      brown      0 px
+
+Hide low-confidence returns OFF (the default now)
+    grey  15,499 px      brown  7,447 px</code></pre>
+    <p>
+      Nothing was thrown away in the second case. Roughly 7,400 pixels' worth of ground clutter that used to be
+      deleted is now visible and marked, and about 2,200 pixels of biological return that used to be deleted
+      came back as well.
+    </p>
+    <p>
+      What the build does <em>not</em> warrant is the classification being right every time. It isn't — see the
+      wind farm above. The honest claim is narrower, and arguably more useful:
+    </p>
+    <div class="callout">
+      <strong>Nothing is hidden, and every return carries a best guess at what it is.</strong>
+      Not: everything on screen is real.
+    </div>
+    <p>
+      One more caveat on the colours: they're placeholders. The grey was reverse-engineered to match what the
+      previous translucent version composited to on the dark basemap, and the brown was picked to sit outside
+      the dBZ ramp. Neither has had a proper design pass, and on the terrain basemap the brown is genuinely
+      hard to see against tan ground. That's a known open item, not an oversight.
+    </p>
+  </section>
+
+  <section>
+    <h2>On forecasting, since it keeps coming up</h2>
+    <p>
+      The comparison that gets raised most is Tomorrow.io, and it's worth being clear about what kind of thing
+      each of these actually is, because they're not competing products.
+    </p>
+    <p>
+      <strong>RadEcho displays a measurement.</strong> Every pixel corresponds to a specific range bin, at a
+      specific elevation angle, at a specific timestamp, with the raw moment values behind it. Nothing is
+      predicted, extrapolated, or modelled.
+    </p>
+    <p>
+      <strong>Tomorrow.io is a forecast company.</strong> Numerical weather prediction, proprietary
+      assimilation, a proprietary sensor network. That is an entirely different engineering problem — model
+      infrastructure rather than display infrastructure, and not something that bolts onto a radar viewer.
+    </p>
+    <p>
+      There is a genuinely interesting middle ground, and it is the one worth arguing about:
+      <strong>nowcasting</strong> — 0 to 2 hour extrapolation from radar alone. Echo motion is tracked across
+      consecutive volumes, a displacement field derived, and the current field advected forward. No atmospheric
+      model, no assimilation: this is moving in this direction at this speed, so here is where it lands in 40
+      minutes.
+    </p>
+    <p>
+      That is tractable here, and some of the groundwork already exists — the frame-to-frame pairing needed to
+      track features was built and verified for an unrelated experiment. The output would be storm-relative
+      arrival estimates for a saved location — a more honest product than a general forecast, because it is an
+      extrapolation of a measurement and degrades gracefully: the thing being extrapolated from can be shown
+      alongside it.
+    </p>
+    <p>
+      What advection can never do is anticipate a storm that has not <em>formed</em> yet. It can only move what
+      already exists. Convective initiation requires a model, and that is the reasonable place to draw the
+      line.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's next</h2>
+    <ul>
+      <li>
+        <strong>A terrain layer derived from the radar itself.</strong> Persistent ground clutter is,
+        functionally, a map of exactly which ridges this radar's beam intersects. Accumulate the clutter
+        classification over many clear-air volumes and the result is a stable terrain mask — not from a DEM, but
+        the beam's own point of view. Useful for the observation that started this line of thinking: storms
+        weakening as they cross the Catskills' eastern wall, with nothing on screen to explain why.
+      </li>
+      <li>
+        <strong>An echo inspector.</strong> Hover or tap a return and get what it actually is: persistence
+        across recent frames, motion, Z<sub>DR</sub> and &rho;<sub>HV</sub>, beam height above ground at that
+        range, and the nearest known obstruction from the public FAA and USGS databases. The wind farm above
+        becomes a one-line answer instead of a mystery.
+      </li>
+      <li>
+        <strong>Cross-station coherence</strong>, carefully scoped. If two radars can see the same volume from
+        different angles, disagreement is real evidence — the first genuinely independent measurement in this
+        whole saga. It turns out to be useless for the wind farm (no neighbouring radar's beam gets within
+        2 km of those turbines), but it's well suited to anomalous propagation, which was the original
+        complaint that built the filter in the first place.
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    Most of the above was found because someone kept asking why. Shorter, less technical updates live on
+    <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a> — a defect report
+    about black holes in storm cores is the reason this post exists.
+  </footer>
+</div>
+</body>
+</html>

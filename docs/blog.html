@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Blast Radius — RadEcho</title>
+<meta name="description" content="Long-form notes on how RadEcho works and why it makes the choices it does. Radar physics, signal processing, and the occasional admission that we had it wrong.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 36px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  .why {
+    padding: 16px 18px; background: #171717; border: 1px solid #2a2a2a;
+    border-left: 3px solid #2f6f4f; border-radius: 6px;
+    font-size: 14px; color: #bbb; margin-bottom: 32px;
+  }
+  .why strong { color: #f2f2f2; }
+  .post {
+    display: block; background: #171717; border: 1px solid #2a2a2a;
+    border-radius: 12px; padding: 22px; text-decoration: none; color: inherit;
+    margin-bottom: 16px; transition: border-color 0.15s, background 0.15s;
+  }
+  .post:hover { border-color: #4a9c70; background: #1c1c1c; }
+  .post .date { font-size: 12.5px; color: #777; margin-bottom: 6px; }
+  .post h2 { font-size: 18px; font-weight: 600; margin: 0 0 8px; color: #f2f2f2; }
+  .post p { font-size: 14px; color: #999; margin: 0; }
+  .post .arrow { font-size: 13px; color: #8bc9a3; margin-top: 14px; }
+  .post .tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .post .tag {
+    font-size: 11.5px; color: #8ba9c9; background: #16202a;
+    border: 1px solid #24384a; border-radius: 4px; padding: 2px 7px;
+  }
+  footer {
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a;
+    font-size: 13px; color: #777;
+  }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>The Blast Radius</h1>
+    </div>
+    <p>Long-form notes on how RadEcho works, and why it makes the choices it does.</p>
+    <div class="links">
+      <a href="index.html">← All pages</a>
+      <a href="whats-new.html">What's New →</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <div class="why">
+    <strong>On the name.</strong> RadEcho exists because Weather Underground's RadBlast went dark around 2022
+    and never came back — a URL-parameterized NEXRAD viewer where you put a station or a lat/lon in and got an
+    animated loop straight out. This is the room where the rebuild gets explained: what the radar is actually
+    measuring, why a given decision was made, and what's still wrong with it. Blast radius, in the other sense,
+    being roughly what you'd expect from changing something in the middle of a rendering pipeline.
+  </div>
+
+  <a class="post" href="blog-01-holes-in-the-storms.html">
+    <div class="date">8 August 2026</div>
+    <h2>The Holes In Your Storms</h2>
+    <p>
+      Why RadEcho punched black gaps through solid precipitation, the twelve attempts that failed to fix it,
+      and the realization that made the problem disappear instead of shrink. Includes a wind farm that renders
+      as a severe thunderstorm, and why the radar's own clutter filter can't touch it.
+    </p>
+    <div class="tags">
+      <span class="tag">dual-pol</span>
+      <span class="tag">clutter</span>
+      <span class="tag">signal processing</span>
+      <span class="tag">ducting</span>
+      <span class="tag">nowcasting</span>
+    </div>
+    <div class="arrow">Read it →</div>
+  </a>
+
+  <footer>
+    Shorter, user-facing updates live on <a href="whats-new.html">What's New</a>.
+    Raw engineering notes: <a href="https://github.com/ajmau01/radecho-issues/blob/main/docs/notes.md">docs/notes.md</a>.
+    Disagree with something here? <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>
