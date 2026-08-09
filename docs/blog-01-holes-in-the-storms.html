@@ -99,8 +99,8 @@
       For months the working assumption was that this was a tuning problem — that some threshold was slightly
       wrong and the right constant would close the gaps. That assumption was wrong, and it cost about a dozen
       failed attempts to establish it. What follows is the whole chain: what the holes actually were, why every
-      obvious fix failed, what finally worked, and why the current build is sound in a way the previous ones
-      structurally could not be.
+      obvious fix failed, what finally worked, and how the current build differs structurally from the ones
+      before it.
     </p>
     <p>
       It gets into the weeds, deliberately.
@@ -161,8 +161,7 @@
   <section>
     <h2>Why a single threshold can never work</h2>
     <p>
-      Here is the part that took an embarrassingly long time to internalize. The published operational
-      literature — the same hydrometeor classification work the NWS uses — puts ground clutter and anomalous
+      The published operational literature — the same hydrometeor classification work the NWS uses — puts ground clutter and anomalous
       propagation in a &rho;<sub>HV</sub> range of roughly <strong>0.5 to 0.95</strong>. It puts heavy rain at
       roughly <strong>0.92 to 1.0</strong>.
     </p>
@@ -319,17 +318,17 @@
       closes that gap, because the information needed to be surgical was discarded upstream.
     </p>
 
-    <h3>The obvious objection: isn't that the same data everyone gets?</h3>
+    <h3>Everyone receives the same data</h3>
     <p>
-      Yes. Identical. RadEcho, RadarScope and WeatherFront all read the same Level II files from the same NOAA
-      bucket, and the site processor's clutter filtering has already been applied to every one of them equally.
-      Nothing about RadEcho's ingest is dirtier, and nobody downstream has access to the I/Q.
+      RadEcho, RadarScope and WeatherFront all read the same Level II files from the same NOAA bucket, and
+      the site processor's clutter filtering has already been applied to every one of them equally. No
+      downstream consumer has access to the I/Q.
     </p>
     <p>
-      A related assumption is worth heading off, because Level II is routinely described as raw. It is the
-      <em>base moments</em> the RDA signal processor outputs — after clutter filtering, after censoring, after
-      velocity dealiasing. "Raw" there distinguishes it from the derived Level III products, not from
-      "unprocessed."
+      Level II is routinely described as raw. It is the <em>base moments</em> the RDA signal processor
+      outputs — after clutter filtering, after censoring, after velocity dealiasing. It distinguishes the
+      base data from the derived Level III products, rather than indicating that no processing has
+      occurred.
     </p>
     <div class="callout">
       <strong>The asymmetry is not in what arrives, it's in what operations are still available.</strong>
@@ -359,10 +358,10 @@
       relying on the operator to recognise it — which, for their audience, is a reasonable bet.
     </p>
     <p>
-      Which raises the fair follow-up: if the data is the same, why did RadEcho add a filter at all? Because
-      the original complaint was convincing fake storms on the clear-air scan patterns, and that population —
-      biological scatter and anomalous propagation — is precisely what GMAP leaves behind. The filter was
-      aimed at a real gap. It simply used an instrument that could not distinguish that gap from heavy rain.
+      Given identical data, the reason RadEcho added a filter was the original defect report: convincing fake
+      storms on the clear-air scan patterns. That population — biological scatter and anomalous propagation —
+      is precisely what GMAP leaves behind, so the filter was aimed at a real gap. It used an instrument that
+      could not distinguish that gap from heavy rain.
     </p>
   </section>
 
@@ -378,7 +377,7 @@
       <tr><td>Normal dBZ ramp</td><td>Everything else, including gates that failed the correlation test but read as smooth.</td></tr>
     </table>
     <p>
-      This is the part worth being precise about, because it carries the whole argument:
+      The distinction that matters:
     </p>
     <div class="callout">
       <strong>The holes are gone by construction, not by tuning.</strong> There is no threshold left in the
@@ -401,10 +400,96 @@
   </section>
 
   <section>
-    <h2>What's still wrong, told straight</h2>
+    <h2>How this compares to the other apps</h2>
     <p>
-      These are all visible in the current build. None are hidden, and all are the kind of thing that gets
-      iterated on.
+      The most useful distinction between radar apps is not the feature list. It is whether the display is
+      <strong>single-site</strong> — one radar's own view, at one elevation angle, at one timestamp — or a
+      <strong>national composite</strong> like MRMS, which merges every radar in the network onto a common
+      grid and applies its own quality control on the way.
+    </p>
+    <p>
+      Composites look cleaner, and there is a real reason for it beyond polish: MRMS can cross-check one radar
+      against its neighbours. A wind farm visible to one radar is invisible to another looking at the same
+      volume from a different angle and a different height, so it can be voted down. That is genuinely
+      independent evidence, and no single-site display has access to it.
+    </p>
+    <p>
+      The cost is resolution and latency. A composite is resampled onto a shared grid and blended across
+      sources, so the fine structure of one radar's native 250 m gates is not what reaches the screen.
+    </p>
+    <table>
+      <tr>
+        <th>&nbsp;</th>
+        <th>RadEcho</th>
+        <th>RadarScope</th>
+        <th>WeatherFront</th>
+        <th>Tomorrow.io</th>
+      </tr>
+      <tr>
+        <td>Primary display</td>
+        <td>Single-site Level II</td>
+        <td>Single-site Level II/III</td>
+        <td>Single-site and MRMS</td>
+        <td>Composite, plus own sensors</td>
+      </tr>
+      <tr>
+        <td>Dual-pol used to filter reflectivity</td>
+        <td>No, off by default</td>
+        <td>No</td>
+        <td>No</td>
+        <td>Not exposed</td>
+      </tr>
+      <tr>
+        <td>Non-weather returns</td>
+        <td>Colour-coded in place</td>
+        <td>Shown as-is</td>
+        <td>Shown as-is</td>
+        <td>Removed upstream by QC</td>
+      </tr>
+      <tr>
+        <td>User control over filtering</td>
+        <td>One opt-in quality filter</td>
+        <td>Separate dual-pol products to inspect</td>
+        <td>dBZ floor, −10 to +40</td>
+        <td>None</td>
+      </tr>
+      <tr>
+        <td>Smoothing</td>
+        <td>On, single kernel</td>
+        <td>Seven selectable smoothers</td>
+        <td>Adjustable, per-variable</td>
+        <td>Applied upstream</td>
+      </tr>
+      <tr>
+        <td>Forecasting</td>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+        <td>Full NWP</td>
+      </tr>
+    </table>
+    <p>
+      Read across the middle rows and the single-site apps agree with each other: none of them use dual-pol to
+      erase reflectivity. RadEcho was the outlier in doing so, and the current build brings it back in line —
+      with the addition that non-weather is marked rather than merely present.
+    </p>
+    <p>
+      The comparison against a composite is different in kind. A phone weather app showing MRMS will not
+      display the Fredonia turbines, because a neighbouring radar contradicted them. RadEcho will, because it
+      has one point of view and reports what that view contains. Whether that is a limitation or the point
+      depends on what the display is for: a composite answers "is it raining on me," while a single-site view
+      answers "what is this radar actually seeing, and how sure is it."
+    </p>
+    <p class="sub">
+      Feature details for the other apps are drawn from their published documentation and are current as of
+      August 2026.
+    </p>
+  </section>
+
+  <section>
+    <h2>Known problems in the current build</h2>
+    <p>
+      All of these are visible in the current build, and all are open items.
     </p>
 
     <h3>There is a wind farm rendering as a severe thunderstorm</h3>
@@ -481,10 +566,10 @@
   </section>
 
   <section>
-    <h2>Why the current build is sound</h2>
+    <h2>What the current build does and does not guarantee</h2>
     <p>
-      For the specific defect — holes through storms — the answer rests on structure rather than tuning. The
-      default view has no delete step at all. The threshold that produced the holes still exists in the
+      For the specific defect — holes through storms — the result comes from structure rather than tuning.
+      The default view has no delete step at all. The threshold that produced the holes still exists in the
       codebase, but only runs for someone who deliberately opts into it via the control beside the legend.
     </p>
     <p>
@@ -501,12 +586,12 @@ Hide low-confidence returns OFF (the default now)
       came back as well.
     </p>
     <p>
-      What the build does <em>not</em> warrant is the classification being right every time. It isn't — see the
-      wind farm above. The honest claim is narrower, and arguably more useful:
+      The classification is not right every time — see the wind farm above. What the build guarantees is
+      narrower:
     </p>
     <div class="callout">
-      <strong>Nothing is hidden, and every return carries a best guess at what it is.</strong>
-      Not: everything on screen is real.
+      <strong>Nothing is removed from the display, and every return carries a best guess at what it
+      is.</strong> Not that everything on screen is precipitation.
     </div>
     <p>
       One more caveat on the colours: they're placeholders. The grey was reverse-engineered to match what the
@@ -533,8 +618,7 @@ Hide low-confidence returns OFF (the default now)
       infrastructure rather than display infrastructure, and not something that bolts onto a radar viewer.
     </p>
     <p>
-      There is a genuinely interesting middle ground, and it is the one worth arguing about:
-      <strong>nowcasting</strong> — 0 to 2 hour extrapolation from radar alone. Echo motion is tracked across
+      Between the two sits <strong>nowcasting</strong> — 0 to 2 hour extrapolation from radar alone. Echo motion is tracked across
       consecutive volumes, a displacement field derived, and the current field advected forward. No atmospheric
       model, no assimilation: this is moving in this direction at this speed, so here is where it lands in 40
       minutes.
@@ -548,8 +632,8 @@ Hide low-confidence returns OFF (the default now)
     </p>
     <p>
       What advection can never do is anticipate a storm that has not <em>formed</em> yet. It can only move what
-      already exists. Convective initiation requires a model, and that is the reasonable place to draw the
-      line.
+      already exists. Convective initiation requires a model, which places it outside what a radar viewer can
+      do from measurements alone.
     </p>
   </section>
 
