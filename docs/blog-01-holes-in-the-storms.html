@@ -303,14 +303,32 @@
       spectrum intact.
     </p>
     <div class="callout">
-      It is, functionally, a notch filter at DC. And because it operates on the spectrum, it removes the
-      clutter's <em>contribution</em> to a gate rather than removing the gate. A range bin containing both a
-      hillside and rain comes out the other side with the rain still in it.
+      It is, functionally, a notch filter at DC — zero frequency, where anything stationary lands. Because it
+      operates on the spectrum, it removes the clutter's <em>contribution</em> to a gate rather than removing
+      the gate. A range bin containing both a hillside and rain comes out the other side with the rain still
+      in it.
     </div>
     <p>
-      RadEcho cannot do that. It receives finished moments, not I/Q. By the time the data arrives, clutter and
-      weather have already been summed into one number per gate, and the only lever left is deleting the whole
-      gate.
+      Worth being exact about what this leaves behind, because it is easy to picture the clutter being
+      stripped out and then folded back in somewhere. It isn't. Where the filter runs, that clutter is
+      <strong>permanently gone</strong> — the moments in a Level II file are computed from the already-filtered
+      spectrum, so its contribution never reaches any downstream consumer at all.
+    </p>
+    <p>
+      What remains welded in is whatever the notch could not catch: anything in motion, and any gate where the
+      filter was not applied. That residue is now part of the same single number as the weather sharing its
+      volume, and no downstream processing can split them.
+    </p>
+    <p>
+      The reason is not re-mixing, it is <strong>dimensionality loss</strong>. A spectrum is many values across
+      frequency. A moment is a summary of it — total power, mean velocity, spread. Told that five numbers
+      average to 12, the five numbers are not recoverable. Reflectivity is that average: it reports the total
+      power returned by a gate, and nothing in it says how much came from the hillside and how much from the
+      rain. The information needed to make that split existed in the spectrum and was discarded when the moment
+      was computed.
+    </p>
+    <p>
+      Which leaves exactly one lever downstream: keep the gate, or drop it.
     </p>
     <p>
       <strong>The site processor filters before the measurement exists; RadEcho was thresholding after
@@ -321,8 +339,9 @@
     <h3>Everyone receives the same data</h3>
     <p>
       RadEcho, RadarScope and WeatherFront all read the same Level II files from the same NOAA bucket, and
-      the site processor's clutter filtering has already been applied to every one of them equally. No
-      downstream consumer has access to the I/Q.
+      the site processor's clutter filtering has already been applied to every one of them equally. There is no
+      cleaner internal version being held back — Level II <em>is</em> the product, and the I/Q it was derived
+      from is not retained for anyone.
     </p>
     <p>
       Level II is routinely described as raw. It is the <em>base moments</em> the RDA signal processor
@@ -333,9 +352,9 @@
     <div class="callout">
       <strong>The asymmetry is not in what arrives, it's in what operations are still available.</strong>
       GMAP <em>subtracts</em>: working on the spectrum, it removes clutter's contribution to a gate and leaves
-      whatever weather shared that volume. Once a moment file exists, clutter and weather have been summed into
-      one number per gate and that decomposition is unrecoverable. The only operation left is removing the
-      entire gate. Same input; upstream had subtraction, downstream has deletion.
+      whatever weather shared that volume. Once a moment file exists, the surviving clutter and the weather are
+      one number and that decomposition is unrecoverable. The only operation left is removing the entire gate.
+      Same input; upstream had subtraction, downstream has deletion.
     </div>
 
     <h3>What survives the filter, on purpose</h3>
