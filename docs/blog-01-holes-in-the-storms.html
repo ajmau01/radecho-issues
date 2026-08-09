@@ -62,6 +62,17 @@
   th { color: #999; font-weight: 500; font-size: 13px; }
   td { color: #ddd; }
   .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+  .discuss {
+    margin: 8px 0 0; padding: 20px; background: #16201a;
+    border: 1px solid #2f6f4f; border-radius: 10px;
+  }
+  .discuss h2 { margin-top: 0; }
+  .discuss .cta {
+    display: inline-block; margin-top: 6px; font-size: 14px; color: #0f1a13;
+    background: #8bc9a3; border-radius: 6px; padding: 9px 16px;
+    text-decoration: none; font-weight: 600;
+  }
+  .discuss .cta:hover { background: #a3d9b7; }
   footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
   footer a { color: #8bc9a3; }
   @media (max-width: 480px) {
@@ -317,6 +328,52 @@
       it.</strong> The first is surgical. The second is a hole punch. No amount of cleverness in the second
       closes that gap, because the information needed to be surgical was discarded upstream.
     </p>
+
+    <h3>The obvious objection: isn't that the same data everyone gets?</h3>
+    <p>
+      Yes. Identical. RadEcho, RadarScope and WeatherFront all read the same Level II files from the same NOAA
+      bucket, and the site processor's clutter filtering has already been applied to every one of them equally.
+      Nothing about RadEcho's ingest is dirtier, and nobody downstream has access to the I/Q.
+    </p>
+    <p>
+      A related assumption is worth heading off, because Level II is routinely described as raw. It is the
+      <em>base moments</em> the RDA signal processor outputs — after clutter filtering, after censoring, after
+      velocity dealiasing. "Raw" there distinguishes it from the derived Level III products, not from
+      "unprocessed."
+    </p>
+    <div class="callout">
+      <strong>The asymmetry is not in what arrives, it's in what operations are still available.</strong>
+      GMAP <em>subtracts</em>: working on the spectrum, it removes clutter's contribution to a gate and leaves
+      whatever weather shared that volume. Once a moment file exists, clutter and weather have been summed into
+      one number per gate and that decomposition is unrecoverable. The only operation left is removing the
+      entire gate. Same input; upstream had subtraction, downstream has deletion.
+    </div>
+
+    <h3>What survives the filter, on purpose</h3>
+    <p>
+      GMAP catches the near-zero-Doppler spectral peak, which is to say it catches things that don't move.
+      Everything else passes through by design, because there is no way to remove moving targets without
+      removing weather along with them:
+    </p>
+    <ul>
+      <li><strong>Anything in motion.</strong> Turbine blades, birds, insects, wave-driven sea clutter.</li>
+      <li>
+        <strong>Ground return where the radar doesn't expect ground.</strong> Under ducting, the beam bends
+        into terrain that a normally-propagating beam would clear — and the RDA's sense of where clutter lives
+        is built around normal propagation.
+      </li>
+      <li><strong>Residual</strong> from gates where suppression was only partial.</li>
+    </ul>
+    <p>
+      So RadarScope and WeatherFront are not displaying cleaner data. They are displaying the same residue and
+      relying on the operator to recognise it — which, for their audience, is a reasonable bet.
+    </p>
+    <p>
+      Which raises the fair follow-up: if the data is the same, why did RadEcho add a filter at all? Because
+      the original complaint was convincing fake storms on the clear-air scan patterns, and that population —
+      biological scatter and anomalous propagation — is precisely what GMAP leaves behind. The filter was
+      aimed at a real gap. It simply used an instrument that could not distinguish that gap from heavy rain.
+    </p>
   </section>
 
   <section>
@@ -530,6 +587,20 @@ Hide low-confidence returns OFF (the default now)
         complaint that built the filter in the first place.
       </li>
     </ul>
+  </section>
+
+  <section class="discuss">
+    <h2>Questions, challenges, corrections</h2>
+    <p>
+      There is a discussion thread for this post. Anything above that reads as hand-waving, any case where the
+      classification is visibly wrong in the field, and any disagreement about where the forecasting line
+      should sit are all fair game — a station, timestamp and rough location is enough to chase a bad
+      classification down to the gate.
+    </p>
+    <p>
+      The post gets corrected rather than defended. Findings from the thread go back into it.
+    </p>
+    <a class="cta" href="https://github.com/ajmau01/radecho-issues/discussions/41">Ask a question or push back →</a>
   </section>
 
   <footer>
