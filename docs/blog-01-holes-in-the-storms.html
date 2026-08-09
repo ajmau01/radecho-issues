@@ -257,10 +257,24 @@
       sample is hitting discrete hard objects rather than a medium.
     </p>
     <div class="callout">
-      The most satisfying detail: CMD's designers evaluated &rho;<sub>HV</sub> as an input and
-      <strong>explicitly discarded it</strong> as not useful for this decision. Twelve rounds of empirical
-      failure, independently confirming a design decision published in 2009.
+      Worth noting what is <em>not</em> in that list: &rho;<sub>HV</sub> appears nowhere among CMD's
+      parameters. Twelve rounds of empirical failure, arriving independently at a feature set published in
+      2009.
     </div>
+    <p>
+      One caveat on the resemblance, because it is not a clean match. The version running on the fleet is
+      non-polarimetric, and its third parameter is <strong>Clutter Phase Alignment</strong> — the pulse-to-pulse
+      phase stability of the time series, computed directly from the I/Q. Ground targets are phase-coherent
+      from pulse to pulse in a way distributed scatterers are not, and CPA is the strongest single
+      discriminator of the three.
+    </p>
+    <p>
+      RadEcho cannot compute it. CPA needs the time series, which does not survive into a moment file. What
+      RadEcho runs is the documented polarimetric enhancement — the standard deviations of Z<sub>DR</sub> and
+      &Phi;<sub>DP</sub>, worth roughly 3 dB of detection performance according to the same work — bolted onto
+      the two texture terms, with the strongest term of the operational algorithm simply unavailable. That is a
+      fair description of the whole situation: the fleet's algorithm minus what only the site can see.
+    </p>
     <p>
       Two additions made it work in practice. A gate that fails the correlation test gets restored if CMD says
       it isn't ragged — but only if <strong>Z<sub>DR</sub> is under 3.0 dB</strong>, which is the biological
@@ -273,6 +287,11 @@
       <div class="stat"><div class="num">0</div><div class="label">station-level overlap across 11 ground-truthed cases</div></div>
       <div class="stat"><div class="num">+1,584 / −0</div><div class="label">pixels added vs removed on a measured before/after</div></div>
     </div>
+    <p>
+      Algorithm details and the implementation history above are from Ice et al., <em>Automatic Clutter
+      Mitigation in the WSR-88D: Design, Evaluation, and Implementation</em>, 34th AMS Conference on Radar
+      Meteorology, 2009 (paper P5.3).
+    </p>
     <p>
       That last number is the one that mattered: rendering the same volume with the rescue off and on added
       1,584 pixels and removed none, with 95.6% of the additions directly adjacent to existing echo. Genuine
@@ -307,6 +326,27 @@
       operates on the spectrum, it removes the clutter's <em>contribution</em> to a gate rather than removing
       the gate. A range bin containing both a hillside and rain comes out the other side with the rain still
       in it.
+    </div>
+    <p>
+      That notch is not applied everywhere, and the reason is instructive. Filtering every bin also bites into
+      weather with <strong>near-zero radial velocity</strong> — a cell moving across the beam rather than along
+      it, or an area of vertical motion inside a storm, puts its energy near DC too. The WSR-88D
+      implementation paper shows exactly this, describing large reflectivity biases in an all-bins-filtered
+      case "due to near zero radial velocities in this region, probably associated with an area of vertical air
+      motion within the cell," and notes that selective filtering "retains more meteorological return as fewer
+      bins are filtered and thus unbiased by the clutter filters."
+    </p>
+    <p>
+      So the radar has to decide, gate by gate, where filtering is safe. The algorithm that makes that call is
+      <strong>CMD</strong> — the same one described earlier. It computes a clutter probability for every range
+      bin, and where that probability exceeds 0.5 it raises a clutter flag; the RDA then uses that flag array
+      to select filtered or unfiltered data per gate. It replaced the static bypass maps that preceded it, and
+      went operational with RDA Build 11.0 in the summer of 2009.
+    </p>
+    <div class="callout">
+      Which closes a loop worth noticing. Upstream, CMD decides <em>where the notch may safely be applied</em>.
+      Downstream, RadEcho uses the same score to decide <em>what colour to paint a gate</em>. Same algorithm,
+      opposite ends of the pipeline, doing the only two things each end is capable of.
     </div>
     <p>
       Worth being exact about what this leaves behind, because it is easy to picture the clutter being
