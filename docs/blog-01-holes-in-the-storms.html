@@ -482,65 +482,59 @@
         <th>RadEcho</th>
         <th>RadarScope</th>
         <th>WeatherFront</th>
-        <th>Tomorrow.io</th>
       </tr>
       <tr>
         <td>Primary display</td>
         <td>Single-site Level II</td>
         <td>Single-site Level II/III</td>
         <td>Single-site and MRMS</td>
-        <td>Composite, plus own sensors</td>
       </tr>
       <tr>
         <td>Dual-pol used to filter reflectivity</td>
         <td>No, off by default</td>
         <td>No</td>
         <td>No</td>
-        <td>Not exposed</td>
       </tr>
       <tr>
         <td>Non-weather returns</td>
         <td>Colour-coded in place</td>
         <td>Shown as-is</td>
         <td>Shown as-is</td>
-        <td>Removed upstream by QC</td>
       </tr>
       <tr>
         <td>User control over filtering</td>
         <td>One opt-in quality filter</td>
         <td>Separate dual-pol products to inspect</td>
         <td>dBZ floor, −10 to +40</td>
-        <td>None</td>
       </tr>
       <tr>
         <td>Smoothing</td>
         <td>On, single kernel</td>
         <td>Seven selectable smoothers</td>
         <td>Adjustable, per-variable</td>
-        <td>Applied upstream</td>
       </tr>
       <tr>
         <td>Forecasting</td>
         <td>None</td>
         <td>None</td>
         <td>None</td>
-        <td>Full NWP</td>
       </tr>
     </table>
     <p>
-      Read across the middle rows and the single-site apps agree with each other: none of them use dual-pol to
-      erase reflectivity. RadEcho was the outlier in doing so, and the current build brings it back in line —
-      with the addition that non-weather is marked rather than merely present.
+      All three are single-site viewers reading the same Level II, which makes the comparison direct. Read
+      across the middle rows and they agree: none of them use dual-pol to erase reflectivity. RadEcho was the
+      outlier in doing so, and the current build brings it back in line — with the addition that non-weather is
+      marked rather than merely present.
     </p>
     <p>
-      The comparison against a composite is different in kind. A phone weather app showing MRMS will not
-      display the Fredonia turbines, because a neighbouring radar contradicted them. RadEcho will, because it
-      has one point of view and reports what that view contains. Whether that is a limitation or the point
+      A composite product is not on the table because it is not the same kind of thing. A phone weather app
+      showing MRMS will not display the Fredonia turbines, because a neighbouring radar contradicted them.
+      RadEcho will, because it has one point of view and reports what that view contains. Whether that is a limitation or the point
       depends on what the display is for: a composite answers "is it raining on me," while a single-site view
       answers "what is this radar actually seeing, and how sure is it."
     </p>
     <p class="sub">
-      Feature details for the other apps are drawn from their published documentation and are current as of
+      RadarScope and WeatherFront details are drawn from their published documentation and are current as of
       August 2026.
     </p>
   </section>
