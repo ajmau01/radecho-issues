@@ -62,17 +62,7 @@
   th { color: #999; font-weight: 500; font-size: 13px; }
   td { color: #ddd; }
   .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
-  .discuss {
-    margin: 8px 0 0; padding: 20px; background: #16201a;
-    border: 1px solid #2f6f4f; border-radius: 10px;
-  }
-  .discuss h2 { margin-top: 0; }
-  .discuss .cta {
-    display: inline-block; margin-top: 6px; font-size: 14px; color: #0f1a13;
-    background: #8bc9a3; border-radius: 6px; padding: 9px 16px;
-    text-decoration: none; font-weight: 600;
-  }
-  .discuss .cta:hover { background: #a3d9b7; }
+  section p.sub { font-size: 13.5px; color: #999; }
   footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
   footer a { color: #8bc9a3; }
   @media (max-width: 480px) {
@@ -589,18 +579,26 @@ Hide low-confidence returns OFF (the default now)
     </ul>
   </section>
 
-  <section class="discuss">
-    <h2>Questions, challenges, corrections</h2>
-    <p>
-      There is a discussion thread for this post. Anything above that reads as hand-waving, any case where the
-      classification is visibly wrong in the field, and any disagreement about where the forecasting line
-      should sit are all fair game — a station, timestamp and rough location is enough to chase a bad
-      classification down to the gate.
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
     </p>
-    <p>
-      The post gets corrected rather than defended. Findings from the thread go back into it.
-    </p>
-    <a class="cta" href="https://github.com/ajmau01/radecho-issues/discussions/41">Ask a question or push back →</a>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
   </section>
 
   <footer>
