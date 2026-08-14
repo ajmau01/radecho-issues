@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why It Kept Falling Over — The Blast Radius</title>
+<meta name="description" content="Four unrelated production incidents in four days — an unbounded cache that grew until the process died, an index that pointed at the wrong volume, a stampede against a cache that had never been cleaned, and corrupted files straight from NOAA. None of it visible in a screenshot. All of it the difference between the app working and not.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  pre {
+    background: #171717; border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 16px 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: 12.5px; line-height: 1.6; color: #cfe6d8; }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: #171717; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .stat .num { font-size: 21px; font-weight: 600; color: #8bc9a3; letter-spacing: -0.01em; }
+  .stat .label { font-size: 12px; color: #999; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #262626; }
+  th { color: #999; font-weight: 500; font-size: 13px; }
+  td { color: #ddd; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+  section p.sub { font-size: 13.5px; color: #999; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 23px; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>Why It Kept Falling Over</h1>
+    </div>
+    <p>Four unrelated production incidents in four days — an unbounded cache that grew until the process died, an
+    index that quietly pointed at the wrong volume, a stampede against a cache that had never once been cleaned,
+    and corrupted files straight from NOAA. None of it visible in a screenshot. All of it the difference between
+    the app working and not.</p>
+    <div class="meta">The Blast Radius · 13 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-02-painted-over.html">← Painted Over</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Why this one's worth writing up</h2>
+    <p>
+      Most of what gets written up here is about what the radar shows and why. This post is about what keeps it
+      showing anything at all. Over a four-day stretch, four separate incidents took the server down or degraded
+      it — none of them related to each other, none of them visible to anyone just looking at a rendered tile.
+      They're worth a post of their own because the pattern across all four is the same one: something was
+      allowed to grow, or repeat, or be trusted, without a limit on it.
+    </p>
+  </section>
+
+  <section>
+    <h2>Incident one: a cache that grew until the process died</h2>
+    <p>
+      Production memory climbed to a <strong>3.1 GB peak</strong>, and every so often the process silently
+      restarted — a V8 out-of-memory kill, not a crash with a stack trace pointing anywhere useful.
+    </p>
+    <p>
+      The cause: two render caches (<code>tierRenderCache</code>, <code>overlayTierRenderCache</code>) were plain
+      JavaScript <code>Map</code> objects with no eviction. Every unique combination of volume, zoom tier, and pan
+      offset got its own permanent entry. A busy day of panning and zooming across several stations just kept
+      adding entries, forever, until the heap gave out.
+    </p>
+    <p>
+      Fixed by swapping both for a bounded LRU cache capped at 300 entries. Memory stabilized at roughly
+      <strong>220 MB</strong> on a fresh restart — down from a 3.1 GB peak that used to recur every few days.
+    </p>
+  </section>
+
+  <section>
+    <h2>Incident two: auto-refresh that quietly stopped updating</h2>
+    <p>
+      Three separate tester reports, at first glance unrelated: auto-refresh freezing, auto-refresh stalling, and
+      a brand-new page load occasionally showing an old frame labelled as the latest one. All three turned out to
+      be the same bug.
+    </p>
+    <p>
+      Every tile route (<code>/frames/:index/tile</code> and its batch/overlay variants) identified a frame by its
+      <strong>array position</strong> in the server's rolling window of recent scans. That window recomputes every
+      five seconds, and a background prewarm loop recomputes it independently on its own schedule. So "frame 3"
+      in the metadata the browser just received could resolve to a completely different volume by the time a
+      follow-up tile request for "frame 3" actually landed — the index was never a stable name for anything, just
+      a snapshot of where something happened to sit a moment ago.
+    </p>
+    <p>
+      Fixed by routing every tile request off the scan's own ISO 8601 timestamp instead of its position —
+      <code>/frames/:scanTime/tile</code>. A timestamp doesn't shift out from under a request the way a position
+      in a moving window does.
+    </p>
+  </section>
+
+  <section>
+    <h2>Incident three: the first prune this box had ever run</h2>
+    <p>
+      Nothing had ever deleted a cached render from disk. Ever. The fix — 14-day retention, 100 GB cap, checked
+      every six hours — went out, and its very first prune against a cache that had accumulated for the project's
+      entire history ran automatically on startup:
+    </p>
+    <pre><code>60,444,124,338 bytes reclaimed   (59 GB -> 1.5 GB)</code></pre>
+    <p>
+      Verified two independent ways — the pruner's own accounting against a from-scratch scan of the cache
+      directory — agreeing to three decimal places. That part worked exactly as designed.
+    </p>
+    <p>
+      What it didn't anticipate: clearing 59 GB in one shot meant every station anyone had recently looked at,
+      including renders from that same morning, went cold simultaneously. A background loop that keeps recently-
+      watched stations warm saw all of them go cold at once and tried to rebuild every one of them at the same
+      time, all competing for a fixed pool of 10 render workers. Load pinned at the pool's ceiling for hours, with
+      a measured <strong>0% cache-hit rate</strong> over a 30-minute window — every request a fresh, uncached S3
+      fetch and render.
+    </p>
+    <p>
+      Buried inside that legitimate backlog was a real, avoidable multiplier: some individual NEXRAD volumes were
+      independently fetched from S3 <strong>3–4 times each</strong>, because the in-flight dedup was keyed on the
+      full rendered variant (station + style + filter + floor), not the raw underlying file — every distinct
+      variant of the identical scan triggered its own separate download, even though the source bytes were
+      identical across all of them. A short-lived, key-only dedup map for the raw fetch fixed that specific
+      multiplier. An independent review caught a real bug in the fix before it shipped — the worker pool detaches
+      whatever buffer it's handed for performance, which is safe when every caller owns an exclusive copy and
+      breaks the moment two callers intentionally share one; a one-line buffer copy closed it. Load dropped from a
+      pinned 10.0–11.16 to 0.85 within minutes of the fix landing.
+    </p>
+    <div class="callout warn">
+      A first-ever prune against a cache that's never been pruned is a fundamentally different event than routine
+      steady-state eviction. Age-based cleanup afterward is gradual by nature and can't cause a stampede; a
+      schema-triggered wipe after months of accumulated history clears everything at once, in one shot, the very
+      first time it runs.
+    </div>
+  </section>
+
+  <section>
+    <h2>Incident four: corrupted files, straight from the source</h2>
+    <p>
+      Server memory climbed again — 5.2 GB, peaking at 6.2 GB — and one station in particular (KDMX, Des Moines)
+      stopped rendering at all. NOAA had uploaded a run of malformed Level II binary files for that station, an
+      hour straight of them. The parsing library hung on each one until the worker task timeout eventually fired
+      at 90 seconds.
+    </p>
+    <p>
+      The part that turned a bad hour of uploads into an incident: the background prewarm loop re-fetched the
+      same corrupt files every 60 seconds, forever, because a failed volume preparation wasn't remembered anywhere
+      — each attempt paid the full download-and-hang-and-timeout cost again, stacking overlapping timeout loops
+      and driving memory up with them.
+    </p>
+    <p>
+      Three fixes landed together:
+    </p>
+    <ul>
+      <li><strong>Negative caching</strong> — a known-bad volume gets remembered for 15 minutes and fast-rejected
+        in 0 ms on the next attempt, no re-download, no re-hang.</li>
+      <li><strong>Integrity validation before parsing</strong> — a minimum radial count, sane radial geometry, a
+        gate-fill-density check, and an azimuth-discontinuity guard, run against the raw bytes before the parser
+        ever gets to them. The fill-density check needed a real second pass: an initial threshold of 50% correctly
+        rejected the byte-shifted corrupt KDMX files but also flagged genuine severe squall lines over Chicago and
+        Davenport as corrupt, because a real MCS can legitimately fill most of a sweep with echo. Recalibrated to
+        90%, which still catches the 100%-solid corrupt files while leaving real severe weather alone.</li>
+      <li><strong>An honest error instead of a silent hang</strong> — a station whose current volume window is
+        corrupt now returns a clear HTTP 503 with a message naming the actual cause, instead of leaving a request
+        to time out with nothing to explain why.</li>
+    </ul>
+    <p>
+      Memory stabilized from a 5.2 GB climb down to a <strong>20–32 MB baseline</strong>.
+    </p>
+    <div class="callout">
+      A hang doesn't just fail once — it poisons the in-memory caches around it indefinitely. The never-settling
+      promise from a parser stuck mid-parse stays cached, so every subsequent request for the identical shape
+      silently rejoins the same zombie promise forever, with no new log output to show anything is still wrong.
+      Only a fix that prevents the hang in the first place, not a restart, actually closes this.
+    </div>
+  </section>
+
+  <section>
+    <h2>A geometry bug that had nothing to do with any of that</h2>
+    <p>
+      Separately, and unrelated to any incident: the NEXRAD interface spec (ICD 2620002P) defines
+      <code>first_gate</code> as the distance to the <strong>center</strong> of the radar's first range bin. One
+      of the two rendering paths (the wedge/native renderer, the default style) had been treating it as the
+      <strong>near edge</strong> instead — every gate polygon it drew was shifted half a gate width, 125 meters,
+      too far outward from the radar. Fixed by centering each gate's near and far bounds symmetrically around its
+      true center distance, matching what the other rendering path had been doing correctly the whole time.
+    </p>
+  </section>
+
+  <section>
+    <h2>What these have in common</h2>
+    <p>
+      Four different subsystems, four different root causes, and the same shape underneath each one: something
+      was allowed to grow without a ceiling (the render cache, the on-disk cache before retention existed), or an
+      identity was assumed stable when the thing underneath it kept moving (the frame index versus its shifting
+      window), or the same expensive work got repeated for the same input because nothing remembered it had
+      already been tried (duplicate S3 fetches, the corrupt-volume retry loop). None of these are exotic bugs.
+      They're the ordinary failure modes of a service that's been running long enough to hit its own edges — the
+      first time a cache is ever actually full, the first time an index actually races its own window, the first
+      time upstream data is actually bad. Every one of them was invisible until it happened for real, under real
+      load, and every one of them is now something the system defends against rather than something it merely
+      hasn't hit yet.
+    </p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="num">3.1 GB → 220 MB</div><div class="label">production memory, unbounded render cache → bounded</div></div>
+    <div class="stat"><div class="num">59 GB → 1.5 GB</div><div class="label">on-disk cache, first prune ever run against it</div></div>
+    <div class="stat"><div class="num">6.2 GB → 20–32 MB</div><div class="label">memory during the corrupt-file incident, before and after</div></div>
+  </div>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-02-painted-over.html">Painted Over</a>. Shorter, less technical updates live on
+    <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>

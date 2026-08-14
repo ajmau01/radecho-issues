@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's Actually In The Air — The Blast Radius</title>
+<meta name="description" content="RadEcho's new air-quality layer: a real-time AQI badge, a translucent band overlay backed by the same EPA polygon service AirNow.gov itself renders from, a clickable layer of every official monitor in view, and click-anywhere crosshair placement.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  pre {
+    background: #171717; border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 16px 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: 12.5px; line-height: 1.6; color: #cfe6d8; }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: #171717; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .stat .num { font-size: 21px; font-weight: 600; color: #8bc9a3; letter-spacing: -0.01em; }
+  .stat .label { font-size: 12px; color: #999; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #262626; }
+  th { color: #999; font-weight: 500; font-size: 13px; }
+  td { color: #ddd; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+  section p.sub { font-size: 13.5px; color: #999; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 23px; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>What's Actually In The Air</h1>
+    </div>
+    <p>RadEcho's new air-quality layer: a real-time AQI badge, a translucent band overlay backed by the same EPA
+    polygon service AirNow.gov itself renders from, a clickable layer of every official monitor in view, and
+    click-anywhere crosshair placement that ships alongside all of it.</p>
+    <div class="meta">The Blast Radius · 14 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-03-why-it-kept-falling-over.html">← Why It Kept Falling Over</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>What's new</h2>
+    <p>
+      RadEcho has always shown what's falling. This is the first layer that shows what's <em>in the air</em>
+      instead — the EPA Air Quality Index, sourced from the same public infrastructure behind AirNow.gov, so a
+      hazy or smoky day carries the same kind of context a storm does. Four pieces ship together: a badge at the
+      crosshair, a translucent band overlay on the map, a layer of clickable individual monitor stations, and a
+      click-anywhere gesture for moving the crosshair itself. All are covered below.
+    </p>
+  </section>
+
+  <section>
+    <h2>The badge and the overlay</h2>
+    <p>
+      Move the crosshair anywhere in the U.S. and a small pill badge reports the EPA category at that exact
+      point — color-coded to the same six-tier scale AirNow itself uses:
+    </p>
+    <table>
+      <tr><th>AQI range</th><th>Category</th><th>Color</th></tr>
+      <tr><td>0–50</td><td>Good</td><td><span class="swatch" style="background:#00e400"></span>Green</td></tr>
+      <tr><td>51–100</td><td>Moderate</td><td><span class="swatch" style="background:#ffff00"></span>Yellow</td></tr>
+      <tr><td>101–150</td><td>Unhealthy for Sensitive Groups</td><td><span class="swatch" style="background:#ff7e00"></span>Orange</td></tr>
+      <tr><td>151–200</td><td>Unhealthy</td><td><span class="swatch" style="background:#ff0000"></span>Red</td></tr>
+      <tr><td>201–300</td><td>Very Unhealthy</td><td><span class="swatch" style="background:#8f3f97"></span>Purple</td></tr>
+      <tr><td>301+</td><td>Hazardous</td><td><span class="swatch" style="background:#7e0023"></span>Maroon</td></tr>
+    </table>
+    <p>
+      The number itself is a combined index over PM2.5 (fine particulates — smoke, haze, combustion byproducts)
+      and ground-level ozone, whichever of the two is currently worse at that location; EPA's own methodology
+      always reports the higher of the two sub-indices as the headline number, since that's the pollutant
+      actually driving health risk at that moment.
+    </p>
+    <p>
+      Turn on the optional map overlay and the same categories paint as translucent bands across the visible
+      area — a regional picture of where the air is worse, not just a single point. It's backed by a live public
+      EPA/AirNow ArcGIS feature service (<code>AirNow24HrCombined</code>) — the literal interpolated contour
+      surface AirNow.gov's own map renders from, not a synthetic grid. Real polygon geometry, filled directly on
+      the map canvas; a real 24-hour rolling history behind it, so animating back through older radar frames pulls
+      the correct historical hour's air-quality band rather than always showing the current one.
+    </p>
+    <div class="callout">
+      A point reading and a regional band can legitimately disagree near a category boundary — a station's exact
+      spot might sit just inside a Good polygon while a Moderate one starts a mile away. The badge only shows a
+      specific number when it agrees with the category actually painted on the map; otherwise it shows the
+      category alone, so the two never visibly contradict each other on screen.
+    </div>
+  </section>
+
+  <section>
+    <h2>The station layer</h2>
+    <p>
+      Toggle on <strong>Show Station Readings</strong> and every active official AirNow monitor currently in
+      view appears as a small dot, colored by its own live category. Click one for a popup with its name, exact
+      reading, what kind of monitor it is (permanent or temporary), and how old the reading is. This is real point
+      data rather than the interpolated regional surface — useful specifically because the two don't always agree
+      near a monitor, and because a contour band can't tell you which physical sensor is actually behind a given
+      reading. The layer only appears on the current/live frame; monitor readings aren't retained with the kind of
+      history the contour service has, so there's nothing honest to show on an older animation frame.
+    </p>
+  </section>
+
+  <section>
+    <h2>Click anywhere to move the crosshair</h2>
+    <p>
+      A plain click anywhere on the radar map now relocates the crosshair to that exact point — the "Center on"
+      field updates with the new coordinates, the marker redraws there immediately, and the AQI badge re-queries
+      for the new spot, all without leaving the current view or station. It's a genuine relocation, not just a
+      look-around: pan and double-click-zoom still move the view without disturbing a placed crosshair, but a
+      direct click is treated as "put it here." Useful for checking air quality or the radar picture at a specific
+      spot — a neighboring town, a trailhead, wherever — without typing coordinates by hand.
+    </p>
+  </section>
+
+  <section>
+    <h2>Being honest about where the data comes from</h2>
+    <p>
+      Not every location has an official monitor nearby. Where the coverage gap search comes up empty, the badge
+      falls back to a coarser regional model estimate rather than showing nothing — and it says so explicitly,
+      labeling a real station reading and a modeled estimate differently rather than presenting both the same way.
+      A modeled estimate is a genuinely different kind of number: useful for a general background sense of air
+      quality, not a substitute for a real sensor reading during a fast-moving, localized event like a nearby
+      wildfire.
+    </p>
+    <p>
+      Historical animation frames never invent a number. If the EPA service hasn't published data for a given
+      hour yet, the badge and overlay show category-only or nothing at all, rather than a fabricated placeholder —
+      the same "label, don't guess" principle the radar rendering itself already follows.
+    </p>
+    <p>
+      The contour and station services are CONUS-only — Hawaii, Alaska, and Puerto Rico currently show no map
+      overlay, falling back gracefully to whatever point data is available. And the underlying EPA product itself
+      only updates hourly, so within a single radar animation loop (typically 30–40 minutes) the air-quality
+      picture will mostly look static — that's the real temporal resolution of the source data, not a rendering
+      shortcut.
+    </p>
+  </section>
+
+  <section>
+    <h2>Shipped fixes worth knowing about</h2>
+    <ul>
+      <li><strong>Badge race condition.</strong> Rapid clicking near a category boundary could occasionally settle
+        on a stale, wrong reading if an older network response landed after a newer one. Fixed with a generation
+        counter that discards any response older than the most recent request.</li>
+      <li><strong>Missing from exports.</strong> The AQI overlay wasn't included in Save Image / Copy Image /
+        animated GIF exports. Now composited into all three at its correct on-screen position and opacity.</li>
+      <li><strong>Station-dot clicks no longer relocate the crosshair.</strong> Clicking a station dot to see its
+        popup was, briefly, also capable of moving the crosshair underneath it — a side effect of two different
+        click handlers both listening on the same area. Fixed so a dot click only ever opens its popup.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What ships off by default</h2>
+    <p>
+      Both the AQI band overlay and the station-dots layer ship unchecked — the standing rule for anything outside
+      the radar itself. The badge at the crosshair is the only piece that's always on.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's next</h2>
+    <p>
+      A third monitor type — low-cost PurpleAir sensors, which fill real gaps between official stations,
+      especially useful near fast-moving events like wildfire smoke — is the planned next addition to the station
+      layer. It requires a personal, free PurpleAir API key rather than anything the app can provision on its own.
+    </p>
+  </section>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-03-why-it-kept-falling-over.html">Why It Kept Falling Over</a>. Shorter, less
+    technical updates live on <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>

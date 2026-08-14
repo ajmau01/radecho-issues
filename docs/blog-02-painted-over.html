@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painted Over — The Blast Radius</title>
+<meta name="description" content="The labelled view fixed deletion by hiding it under solid color. That turned out to be the same failure wearing a different color. What replaced it, and why nothing in the default view touches a pixel's true value anymore.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  pre {
+    background: #171717; border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 16px 0;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: 12.5px; line-height: 1.6; color: #cfe6d8; }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+  .stat { background: #171717; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .stat .num { font-size: 21px; font-weight: 600; color: #8bc9a3; letter-spacing: -0.01em; }
+  .stat .label { font-size: 12px; color: #999; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #262626; }
+  th { color: #999; font-weight: 500; font-size: 13px; }
+  td { color: #ddd; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+  section p.sub { font-size: 13.5px; color: #999; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 23px; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>Painted Over</h1>
+    </div>
+    <p>The labelled view fixed deletion by hiding it under solid color. That turned out to be the same failure wearing a different color — and a clear, calm night is what proved it. What replaced it, and why nothing in the default view touches a pixel's true value anymore.</p>
+    <div class="meta">The Blast Radius · 12 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-01-holes-in-the-storms.html">← Holes In The Storms</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Where the last post left off</h2>
+    <p>
+      <a href="blog-01-holes-in-the-storms.html">Holes In The Storms</a> ended on what felt like the right answer:
+      stop deleting gates on a &rho;<sub>HV</sub> threshold, because no threshold can tell heavy rain from clutter
+      apart, and label instead — paint non-weather gates slate grey (biological) or earthy brown (clutter/AP) and
+      leave everything else showing its true reflectivity. The holes closed. Nothing was destroyed anymore. That
+      shipped as the default four days before this post and it held for exactly four days.
+    </p>
+    <p>
+      It didn't fail because the classifier was wrong. It failed because <strong>painting a gate solid grey or
+      solid brown is still overwriting its true value</strong> — and that turns out to matter in two directions at
+      once, both discovered the same week.
+    </p>
+  </section>
+
+  <section>
+    <h2>A clear, calm night turns the screen brown</h2>
+    <p>
+      On the night of 2026-08-09/10 — clear sky, light wind, no weather anywhere — the labelled default filled
+      with grey and brown at four stations independently. Measured, with METARs swept across each station's full
+      coverage circle at scan time:
+    </p>
+    <table>
+      <tr><th>Station</th><th>VCP</th><th>Precip</th><th>Biological</th><th>Clutter/AP</th><th>Non-weather</th><th>Ground truth</th></tr>
+      <tr><td>KOKX 00:33Z</td><td>35</td><td>20.0%</td><td>43.2%</td><td>36.8%</td><td><strong>80.0%</strong></td><td>15 METARs, all dry</td></tr>
+      <tr><td>KENX 02:00Z</td><td>35</td><td>13.4%</td><td>47.2%</td><td>39.4%</td><td><strong>86.6%</strong></td><td>12 METARs, all dry</td></tr>
+      <tr><td>KRAX 02:12Z</td><td>212</td><td>26.5%</td><td>45.2%</td><td>28.2%</td><td><strong>73.4%</strong></td><td>12 of 14 dry</td></tr>
+      <tr><td>KBUF 02:02Z</td><td>35</td><td>52.3%</td><td>16.7%</td><td>30.9%</td><td>47.6%</td><td>real precip, W half</td></tr>
+    </table>
+    <p>
+      The classifier was not wrong. Every one of those brown and grey regions really was non-weather — KBUF is
+      the control, with genuine precipitation in its western coverage, and its non-weather fraction is
+      correspondingly half the other three. The problem was that <strong>correct and useless can be the same
+      thing</strong>. A screen that's 80–87% grey and brown doesn't read as "here's what's not real weather." It
+      reads as noise.
+    </p>
+    <h3>Most of it wasn't terrain — it was the atmosphere lying that night specifically</h3>
+    <p>
+      Terrain returns are the same targets on every scan. Anomalous propagation is a <em>propagation state</em> —
+      whether the atmosphere is bending the beam into ground it normally clears. Same station, same day, midday
+      versus the same clear calm night:
+    </p>
+    <pre><code>KENX  midday (16:00Z):  5,643 clutter gates,  2,671 cells
+KENX  night  (02:00Z): 74,835 clutter gates, 14,845 cells
+      cells in both:     2,329   <- the genuine fixed-terrain core
+      night-only cells: 12,516   <- 84.3% of that night's footprint
+
+KRAX  midday: 12,458 / 5,761   ->  night 79,857 / 19,972   (75.2% night-only)
+KBUF  midday: 19,780 / 5,630   ->  night 68,709 / 12,673   (61.0% night-only)</code></pre>
+    <p>
+      A 13x jump in clutter gates at the same radar, looking at the same unchanged hills, on the same day. This is
+      a nocturnal radiation inversion — clear sky, calm wind, the ground radiating heat away and bending the
+      beam down into terrain it normally overshoots. And there's a real physical coupling behind why this always
+      shows up worst exactly when the labelled view has nothing to protect: clear-air scan patterns (VCP 31/34/35)
+      are selected <em>because</em> there's no precipitation, and they deliberately censor at a much lower SNR
+      threshold specifically to reveal faint returns — which is also exactly the regime where radiation
+      inversions and AP peak. The entire argument for label-don't-delete (real weather should never be erased) is
+      inactive on a night when there's no real weather within 230 km, and that's precisely the night the display
+      is at its worst.
+    </p>
+  </section>
+
+  <section>
+    <h2>The tempting fix, tried and reverted the same night</h2>
+    <p>
+      The obvious response: default to the filtered view on clear-air VCPs (nothing to protect) and the labelled
+      view on precipitation VCPs (where deletion is dangerous). As a cheaper stand-in, a plain dBZ floor was
+      tried as the clear-air default instead of resurrecting the RhoHV filter — hide everything below some
+      intensity, no quality signal involved, nothing that could mistake a hailstone for a hillside.
+    </p>
+    <p>
+      It went out, and within hours came back reported as "moth holed again" on KRAX — a real rain band northwest
+      of Durham. Measured on the actual volume:
+    </p>
+    <pre><code>KRAX20260810_022135_V06, VCP 212, 02:24:40Z — rain band NW of Durham
+
+gates >=5 dBZ in the band:  11,171
+rendered (passed the old RhoHV cut):  3,679   (32.9%)
+DROPPED:                               7,492   (67.1%)   median 9.5 dBZ, 61.4 km
+
+why the CMD rescue pass didn't save them:
+  below the near-field rescue floor:  7,432   (99.2% of the drops)
+  scored clutter on CMD:                 42   (0.6%)
+  ZDR at/above the biological ceiling:   18   (0.2%)</code></pre>
+    <p>
+      Two-thirds of a real rain band, gone. Light rain at 61 km is weak — median 9.5 dBZ — and weak echo means low
+      signal-to-noise, and low SNR biases &rho;<sub>HV</sub> <em>downward</em> independent of what's actually
+      there. So genuine light precipitation fails a correlation cut it has no business failing, and the rescue
+      pass's own near-field floor (tuned to keep it from rescuing genuine clutter) excludes that exact population
+      from being saved. The floor and the RhoHV filter are different mechanisms hiding a similar amount of data,
+      but they fail in opposite shapes: the filter punches holes through a solid band, the floor recedes a clean
+      edge. Both hide roughly the same weather; only one of them looks broken doing it. That's a real distinction
+      and it isn't nothing — but hiding two-thirds of a real rain band is still hiding two-thirds of a real rain
+      band, on any device that reaches for the label "default."
+    </p>
+    <p>
+      The stopgap was reverted the same night, undeployed. Production stayed on the labelled default while the
+      real fix got designed.
+    </p>
+  </section>
+
+  <section>
+    <h2>The actual fix: stop painting, period</h2>
+    <p>
+      Here's the piece that took longest to see. The labelled view's grey and brown fills weren't just cosmetically
+      loud on a clear night — they were structurally the same category of mistake as the black holes from the
+      first post, just wearing a friendlier color:
+    </p>
+    <div class="callout warn">
+      Replacing a gate's true reflectivity with a flat grey or brown erases the gradient underneath it. A weak
+      insect bloom and a dense one paint identically. And on a misclassified gate <em>inside a genuine severe
+      storm</em> — a hail core with naturally low &rho;<sub>HV</sub>, exactly the case CMD is prone to mistag at
+      long range — solid brown doesn't just mislabel the gate. It masks a real 50–70 dBZ echo and shows the user
+      a void where a dangerous storm actually is. That is the black hole from the first post, recolored.
+    </div>
+    <p>
+      So the fix wasn't a better threshold, a VCP-aware default, or a smarter floor. It was retiring the entire
+      delete-on-quality-signal architecture — not just leaving it opt-in, <strong>removing it</strong> — and
+      separating classification from the pixel it classifies entirely.
+    </p>
+    <h3>What actually got deleted (the code, this time, on purpose)</h3>
+    <p>
+      The RhoHV delete branches in both rasterizers, the despeckle/suppress/rescue pipeline that existed only to
+      make deletion survivable, the "Hide low-confidence returns" checkbox, and `filterRhoHV`'s place in both
+      cache keys — gone. None of that machinery is needed once nothing deletes on a quality signal anymore. The
+      classifier itself (`isClutterGate`, CMD, the ZDR biological ceiling) was untouched; it still computes
+      exactly the same call on exactly the same moments. What changed is what happens to that call's answer.
+    </p>
+  </section>
+
+  <section>
+    <h2>What ships now</h2>
+    <p>
+      Classification became a second, independent, fully transparent raster layer — rendered separately, cached
+      separately, composited in the browser on top of the base reflectivity rather than baked into it:
+    </p>
+    <pre><code>Basemap (dark / RadBlast)
+  1. .radar-frame     — true dBZ reflectivity, 100% unmodified, always on
+  2. .overlay-frame    — transparent tags, opt-in, off by default
+  3. .labels           — roads / place names, always on top</code></pre>
+    <table>
+      <tr><th>Rendered as</th><th>What it means</th><th>Condition</th></tr>
+      <tr><td><span class="swatch" style="background:#50aaf0"></span>Cyan (60% alpha)</td><td>Biological — insects, birds</td><td>Z<sub>DR</sub> &ge; 3.0 dB</td></tr>
+      <tr><td><span class="swatch" style="background:#dc8228"></span>Amber (60% alpha)</td><td>Ground clutter / AP</td><td>&rho;<sub>HV</sub> &lt; 0.95, CMD &ge; 0.25, beam height &lt; 2 km</td></tr>
+      <tr><td>Fully transparent</td><td>Everything else</td><td>True dBZ ramp shows through, untouched</td></tr>
+    </table>
+    <p>
+      The toggle is <strong>Non-weather tags</strong>, and it ships unchecked. When it's off, the client never
+      even requests the overlay tiles — zero network cost, not just zero visual effect. When it's on, the true
+      color underneath a tagged gate is still fully visible through the tint; a 60 dBZ core that gets tagged
+      amber reads as translucent amber over red, not solid brown over nothing. Base reflectivity tiles are
+      byte-identical whether the toggle is on or off — verified directly, not assumed, because that's the whole
+      argument for why this was safe to ship.
+    </p>
+    <div class="callout">
+      <strong>Nothing in the default view can delete a gate or replace its color anymore.</strong> Not a
+      threshold someone forgot to check, not a floor tuned wrong for one intensity band — there's no mechanism
+      left in the default path capable of either. The base raster is, byte for byte, the Level II moment the
+      radar actually measured.
+    </div>
+    <p>
+      One real bug surfaced building this, worth keeping because of what it says about testing a layered system:
+      the overlay silently failed to render at all over a real clutter cluster near Fredonia — traced to the
+      worker pool never receiving the overlay's destination file path, so it just skipped generating it, and the
+      cache-validity check only ever looked for the base raster file, so it happily served a permanently-missing
+      overlay as if nothing were wrong. A two-layer system needs both layers checked, not just the one users
+      complain about first.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's still true from the first post, and what's now wrong in it</h2>
+    <p>
+      <a href="blog-01-holes-in-the-storms.html">Holes In The Storms</a> remains the right explanation of the
+      physics — why a &rho;<sub>HV</sub> threshold can never cleanly separate clutter from real weather, why CMD's
+      texture axis works where a correlation cut doesn't, why the radar's own upstream clutter filter can subtract
+      but nothing downstream can. None of that changed. What changed is the last section of it: the "current build"
+      it describes — solid grey and brown baked into the default view — is no longer what ships. That's this post.
+    </p>
+    <p>
+      Carried forward unchanged, because nothing here touched them:
+    </p>
+    <ul>
+      <li>
+        <strong>The Arkwright wind farm still renders as a 50 dBZ storm, untagged even with the overlay on.</strong>
+        Turbine blades move, so they sail through the radar's own upstream notch filter same as before; they read
+        &rho;<sub>HV</sub> 0.985, which clears the 0.95 cut comfortably, so the classifier never flags them amber.
+        Same open problem, same root cause, unaffected by any of this.
+      </li>
+      <li>
+        Deep convection at extreme range can still score raggedness on CMD and get tagged amber inside a genuine
+        storm core — the height guard above 3 km ARL catches most of it, not all.
+      </li>
+      <li>
+        The colors are still provisional. Cyan and amber were picked to be visually distinct from the dBZ ramp and
+        legible over the dark basemap; the terrain-basemap legibility pass never happened.
+      </li>
+    </ul>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="num">3</div><div class="label">production default architectures tried in five days — delete, label, overlay</div></div>
+    <div class="stat"><div class="num">67.1%</div><div class="label">of a real rain band deleted by the floor-as-default stopgap, reverted same night</div></div>
+    <div class="stat"><div class="num">0</div><div class="label">gates the current default can delete or recolor — the mechanism no longer exists</div></div>
+  </div>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-01-holes-in-the-storms.html">Holes In The Storms</a>. Shorter, less technical
+    updates live on <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>
