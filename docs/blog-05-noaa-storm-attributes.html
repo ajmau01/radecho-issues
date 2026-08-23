@@ -53,6 +53,9 @@
   th { color: #999; font-weight: 500; font-size: 13px; }
   td { color: #ddd; }
   section p.sub { font-size: 13.5px; color: #999; }
+  figure.shot { margin: 20px 0; }
+  figure.shot img { width: 100%; display: block; border-radius: 8px; border: 1px solid #2a2a2a; }
+  figure.shot figcaption { font-size: 12.5px; color: #888; margin-top: 8px; text-align: center; }
   footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
   footer a { color: #8bc9a3; }
   @media (max-width: 480px) {
@@ -93,6 +96,10 @@
       rotating, whether it's showing tornado-scale rotation specifically, and — on click — its hail probability,
       vertically integrated liquid, and storm-top height.
     </p>
+    <figure class="shot">
+      <img src="img/scit-overview.png" alt="RadEcho showing the NOAA Storm Attributes layer over a real convective cluster near Tampa, FL — cyan diamond markers with motion-vector arrows, two circled mesocyclone badges.">
+      <figcaption>A real, active cluster near Tampa, FL — motion-vector arrows on every tracked cell, with two mesocyclone badges (circled) on the strongest cores.</figcaption>
+    </figure>
   </section>
 
   <section>
@@ -113,6 +120,10 @@
       Click any marker for the full detail popup: hail probability, vertically integrated liquid (VIL — a proxy
       for how much water and ice the storm is holding aloft, and a real severity indicator), and storm-top height.
     </p>
+    <figure class="shot">
+      <img src="img/scit-popup.png" alt="Detail popup for a real tracked storm cell: 57 dBZ max, VIL 35, storm top 39,200 feet, motion 47° at 6 knots, mesocyclone strength 1, 50% probability of hail.">
+      <figcaption>Real detail popup for one of the mesocyclone-flagged cells above — max dBZ, VIL, storm top, motion, and hail probability, all from NOAA's own algorithm.</figcaption>
+    </figure>
   </section>
 
   <section>

@@ -49,6 +49,9 @@
   .callout.warn { border-left-color: #8a6d3b; }
   .callout strong { color: #f2f2f2; }
   section p.sub { font-size: 13.5px; color: #999; }
+  figure.shot { margin: 20px 0; }
+  figure.shot img { width: 100%; display: block; border-radius: 8px; border: 1px solid #2a2a2a; }
+  figure.shot figcaption { font-size: 12.5px; color: #888; margin-top: 8px; text-align: center; }
   footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
   footer a { color: #8bc9a3; }
   @media (max-width: 480px) {
@@ -97,6 +100,10 @@
       from a true distance ring at longer radii and higher latitudes.
     </p>
     <p>Range rings ship off by default, same as every non-radar overlay.</p>
+    <figure class="shot">
+      <img src="img/range-rings.png" alt="RadEcho showing six labeled range rings (25 to 250 km) drawn as true geodesic circles from the crosshair over a real storm near Tampa, FL.">
+      <figcaption>All six rings, drawn as true geodesics rather than flat circles, centered on a real storm near Tampa, FL.</figcaption>
+    </figure>
   </section>
 
   <section>
@@ -124,6 +131,10 @@
       on), a CMD texture score, and the resulting classification. Useful for understanding exactly why a given
       pixel looks the way it does, rather than taking the rendered color on faith.
     </p>
+    <figure class="shot">
+      <img src="img/echo-inspector-popup.png" alt="Echo Inspector popup on a real storm core near Tampa, FL, reading 40.5 dBZ reflectivity, ZDR 1.03 dB, RhoHV 0.995, CMD score 0.00, classified as precipitation.">
+      <figcaption>A real click on a storm core: reflectivity, range/azimuth, ZDR, RhoHV, CMD score, and classification, all read directly off the gate.</figcaption>
+    </figure>
     <p>
       Echo Inspector requires <strong>Native style</strong> — gate-level data isn't available in the classic
       grid-rendering style, so the Inspect button is disabled there. It reports the same values regardless of
