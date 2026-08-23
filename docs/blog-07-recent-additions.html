@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Range Rings, Long-Range Accuracy, and the Echo Inspector — The Blast Radius</title>
+<meta name="description" content="Three recent additions to RadEcho: distance rings from the crosshair with a km/mi unit preference, corrected long-range gate positioning beyond 160 km, and the Echo Inspector for reading raw values off any point on the radar.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 26px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  section p.sub { font-size: 13.5px; color: #999; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>Range Rings, Long-Range Accuracy, and the Echo Inspector</h1>
+    </div>
+    <p>Three smaller additions worth a proper writeup: distance rings from the crosshair with a km/mi
+    preference, corrected long-range positioning beyond 160 km, and a way to read raw values off any point on
+    the radar.</p>
+    <div class="meta">The Blast Radius · 23 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-06-lightning-activity.html">← Lightning Activity Layer</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Range rings and a real unit preference</h2>
+    <p>
+      <strong>Show Range Rings</strong>, in the legend, draws a set of distance rings out from the crosshair —
+      six rings at round distances (25, 50, 100, 150, 200, and 250 km, or 10, 25, 50, 75, 100, and 150 mi
+      depending on your unit setting), each labeled with its distance. Useful for judging at a glance how far a
+      storm actually is from a specific point, rather than estimating against the basemap alone.
+    </p>
+    <p>
+      Alongside the rings, RadEcho now has a real app-wide <strong>km / mi</strong> preference (in the Display
+      section of the toolbar) — the first time this app has had a persisted unit setting. It's not just the ring
+      labels: switching units changes every distance shown in the app, including the Echo Inspector's range
+      readout and the nearest-station distance shown by <strong>Locate</strong>. Switching units also swaps in a
+      genuinely different, unit-appropriate set of ring radii rather than just relabeling the same physical
+      circles — the mi-mode rings aren't metric ones with a converted label.
+    </p>
+    <p>
+      The rings themselves are drawn using the app's real spherical geodesy, the same math that positions the
+      radar data itself (see the long-range accuracy fix below) — not a flat circle, which would visibly bow away
+      from a true distance ring at longer radii and higher latitudes.
+    </p>
+    <p>Range rings ship off by default, same as every non-radar overlay.</p>
+  </section>
+
+  <section>
+    <h2>Corrected long-range positioning</h2>
+    <p>
+      Radar gates beyond about 160 km from the station were being positioned using an approximation that treats
+      the Earth as flat near the station — accurate enough close in, but measurably wrong at long range and high
+      latitude. That's now replaced with true spherical geodesy everywhere in the app, not just close to the
+      radar. In practice this means far-range echoes — a storm 200+ km out, right at the edge of a station's
+      useful coverage — now sit at their true position on the map, rather than being subtly displaced.
+    </p>
+    <p>
+      This is a pure accuracy fix with no new controls to turn on — it's just correct now, for every station, at
+      every range, everywhere gate positions get computed: the base render, the non-weather shading overlay, and
+      the new range rings above.
+    </p>
+  </section>
+
+  <section>
+    <h2>Echo Inspector: raw values at any point</h2>
+    <p>
+      Click <strong>Inspect</strong>, then click or tap any point on the radar, and a popup reports the actual
+      values driving what's rendered there: reflectivity in dBZ, range and azimuth from the station, ZDR and
+      RhoHV (the dual-polarization measurements RadEcho's own clutter and biological-scatter filtering is based
+      on), a CMD texture score, and the resulting classification. Useful for understanding exactly why a given
+      pixel looks the way it does, rather than taking the rendered color on faith.
+    </p>
+    <p>
+      Echo Inspector requires <strong>Native style</strong> — gate-level data isn't available in the classic
+      grid-rendering style, so the Inspect button is disabled there. It reports the same values regardless of
+      whether smoothing is on, and flags a value as smoothed rather than raw where an older cached scan predates
+      raw-value capture, instead of silently mixing the two.
+    </p>
+    <p>
+      This is the first phase of a planned two-part feature — beam height/altitude at the clicked point is
+      intentionally not included yet, held back until the underlying elevation-angle groundwork it depends on is
+      further along.
+    </p>
+  </section>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-06-lightning-activity.html">Lightning Activity Layer</a>. Shorter, less
+    technical updates live on <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>
