@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Historical Review — The Blast Radius</title>
+<meta name="description" content="RadEcho can now load an exact past date and local time window for any station — a real calendar date picker and local-time range, opt-in only. Nothing changes for current weather.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; color: #e8e8e8; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  .callout {
+    margin: 18px 0; padding: 14px 16px; background: #171717;
+    border: 1px solid #2a2a2a; border-left: 3px solid #2f6f4f;
+    border-radius: 6px; font-size: 14.5px; color: #ccc;
+  }
+  .callout.warn { border-left-color: #8a6d3b; }
+  .callout strong { color: #f2f2f2; }
+  section p.sub { font-size: 13.5px; color: #999; }
+  figure.shot { margin: 20px 0; }
+  figure.shot img { width: 100%; display: block; border-radius: 8px; border: 1px solid #2a2a2a; }
+  figure.shot figcaption { font-size: 12.5px; color: #888; margin-top: 8px; text-align: center; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>Historical Review</h1>
+    </div>
+    <p>Load an exact past date and local time window for any station — a real calendar date picker and a
+    local-time range, both opt-in. Nothing about current weather changes.</p>
+    <div class="meta">The Blast Radius · 23 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-08-station-list.html">← Station List</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>What's new</h2>
+    <p>
+      RadEcho can now load radar for a specific past date and a specific local time window, at any station —
+      a real calendar picker instead of a list of dates already viewed, and start/end time fields in the
+      station's own local time instead of UTC. Pick a date, type a start and end time, and RadEcho loads every
+      volume in that window in one request.
+    </p>
+    <figure class="shot">
+      <img src="img/historical-review-yosemite.png" alt="RadEcho showing real historical radar for KHNX on June 30, 2022, with the clock reading 22:56 UTC and real reflectivity data over the San Joaquin Valley.">
+      <figcaption>KHNX, June 30, 2022 — a real historical scan loaded by station, date, and local time window.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Off by default — this is the important part</h2>
+    <p>
+      <strong>If you don't touch the date or time fields, RadEcho behaves exactly as it always has: current
+      weather, live.</strong> A blank date means live, not "some ambiguous default date." Historical review is
+      something you opt into by filling in a date and a time window — it never activates on its own, and it
+      never changes what a plain station load shows.
+    </p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <p>
+      Pick a station, pick a date on the calendar, and set a start and end time. Those times are in the
+      <strong>station's own local time zone</strong> — a small badge next to the fields shows which one (PDT,
+      EDT, MST, whatever applies), so a time you type for a California station means Pacific time regardless of
+      where you happen to be sitting. RadEcho converts that to the correct UTC instant behind the scenes,
+      including the correct offset across a daylight-saving transition, and loads every radar volume in that
+      window.
+    </p>
+    <p>
+      A local time range is capped at three hours per load — long enough to cover a real event without asking
+      the server to render an unbounded number of volumes in one request. A date picked with no start or end
+      time still works the old way: RadEcho shows the tail end of that day, same as before this feature existed.
+    </p>
+    <p>
+      Every setting — station, date, local start and end time — is captured in the page's URL. A link built from
+      a loaded view reproduces that exact view for anyone who opens it, no re-entering anything.
+    </p>
+  </section>
+
+  <section>
+    <h2>What it's for</h2>
+    <p>
+      Looking back at what the radar actually showed during a specific past event — a storm you remember, an
+      afternoon you were somewhere and want to know what was overhead, a date worth double-checking against
+      your own memory of what happened. RadEcho's archive goes back years, and this is the difference between
+      knowing that and actually being able to look.
+    </p>
+  </section>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-08-station-list.html">A Grouped Station List and a Personal Watch List</a>.
+    Shorter, less technical updates live on <a href="whats-new.html">What's New</a>. Something look wrong?
+    <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>
