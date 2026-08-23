@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Grouped Station List and a Personal Watch List — The Blast Radius</title>
+<meta name="description" content="RadEcho's station picker now groups every station by state with cities sorted alphabetically, and a new Watch button lets you build your own shortcut list of frequently-checked stations.">
+<link rel="icon" href="https://radar.socialvinyl.app/favicon-32.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #111; color: #eee; margin: 0; padding: 0; line-height: 1.55;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { margin-bottom: 40px; }
+  header .title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header .title-row img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+  header h1 { font-size: 26px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header p { color: #999; font-size: 15px; margin: 0; }
+  header .meta { font-size: 13px; color: #777; margin-top: 10px; }
+  header .links { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  header .links a {
+    font-size: 13px; color: #8bc9a3; text-decoration: none;
+    border: 1px solid #2f6f4f; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  header .links a:hover { background: #1c1c1c; border-color: #4a9c70; }
+  section { padding: 28px 0; border-top: 1px solid #2a2a2a; }
+  section h2 { font-size: 20px; font-weight: 600; margin: 0 0 14px; color: #f2f2f2; }
+  section p { font-size: 15px; color: #ddd; margin: 0 0 14px; }
+  section p:last-child { margin-bottom: 0; }
+  section ul, section ol { font-size: 15px; color: #ddd; margin: 0 0 14px; padding-left: 22px; }
+  section li { margin-bottom: 7px; }
+  section a { color: #8bc9a3; }
+  strong { color: #f2f2f2; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: #1c1c1c; border: 1px solid #2f2f2f;
+    border-radius: 4px; padding: 1px 5px; color: #cfe6d8;
+  }
+  section p.sub { font-size: 13.5px; color: #999; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; font-size: 13px; color: #777; }
+  footer a { color: #8bc9a3; }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 18px 60px; }
+    header h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-row">
+      <img src="img/logo.png" alt="">
+      <h1>A Grouped Station List and a Personal Watch List</h1>
+    </div>
+    <p>The station picker now groups every station by state, and a new Watch button lets you build your own
+    shortcut list instead of a fixed set of seven.</p>
+    <div class="meta">The Blast Radius · 23 August 2026</div>
+    <div class="links">
+      <a href="blog.html">← The Blast Radius</a>
+      <a href="blog-07-recent-additions.html">← Range Rings, Long-Range Accuracy, and the Echo Inspector</a>
+      <a href="https://radar.socialvinyl.app/viewer.html">Open RadEcho →</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Grouped by state, sorted by city</h2>
+    <p>
+      The station dropdown used to list every station in raw ICAO-code order — readable once you know the codes,
+      opaque otherwise. It's now grouped by state, states in alphabetical order, and stations sorted by city name
+      within each state. Looking for the nearest station to a specific place is now a matter of scanning one state
+      group instead of scrolling a flat list of codes.
+    </p>
+    <p>
+      A couple of stations don't fit a U.S. state: overseas military sites (Kunsan, Camp Humphreys) get their own
+      "Overseas" group, and the handful of TDWR terminal-radar codes that have no city/state on record at all
+      (present in the data but without a name attached) are grouped together as "Other" at the end, instead of
+      showing up as unlabeled codes scattered through the middle of the list.
+    </p>
+  </section>
+
+  <section>
+    <h2>A personal Watch list</h2>
+    <p>
+      The shortcut row at the top of the dropdown — previously a fixed set of seven stations — is now yours to
+      set. A new <strong>☆ Watch</strong> button next to the station picker adds or removes the current station
+      from your own list; once added, it turns into <strong>★ Watched</strong> and the station shows up in that
+      top shortcut row every time you open the picker.
+    </p>
+    <p>
+      Useful if the stations you check regularly aren't the ones RadEcho happened to ship with by default — build
+      the list around wherever you actually live, work, or watch weather for. It's saved in your browser, so it
+      persists across visits without needing an account.
+    </p>
+  </section>
+
+  <section>
+    <h2>Comments</h2>
+    <p class="sub">
+      Sign in with GitHub to comment. Threads live in this repository's Discussions.
+    </p>
+    <script src="https://giscus.app/client.js"
+            data-repo="ajmau01/radecho-issues"
+            data-repo-id="R_kgDOThxoCQ"
+            data-category="General"
+            data-category-id="DIC_kwDOThxoCc4DDAKd"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="transparent_dark"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
+
+  <footer>
+    Previously: <a href="blog-07-recent-additions.html">Range Rings, Long-Range Accuracy, and the Echo
+    Inspector</a>. Shorter, less technical updates live on <a href="whats-new.html">What's New</a>. Something
+    look wrong? <a href="https://github.com/ajmau01/radecho-issues/issues/new/choose">Open an issue</a>.
+  </footer>
+</div>
+</body>
+</html>
