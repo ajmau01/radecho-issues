@@ -104,17 +104,25 @@
   <section>
     <h2>How it works</h2>
     <p>
-      Pick a station, pick a date on the calendar, and set a start and end time. Those times are in the
-      <strong>station's own local time zone</strong> — a small badge next to the fields shows which one (PDT,
-      EDT, MST, whatever applies), so a time you type for a California station means Pacific time regardless of
-      where you happen to be sitting. RadEcho converts that to the correct UTC instant behind the scenes,
-      including the correct offset across a daylight-saving transition, and loads every radar volume in that
-      window.
+      The date and time fields live in their own <strong>RadPast</strong> section, separate from the station
+      picker above it and the display options below — pick a station, pick a date on the calendar, and set a
+      start and end time. Those times are in the <strong>station's own local time zone</strong> — a small badge
+      next to the fields shows which one (PDT, EDT, MST, whatever applies), so a time you type for a California
+      station means Pacific time regardless of where you happen to be sitting. RadEcho converts that to the
+      correct UTC instant behind the scenes, including the correct offset across a daylight-saving transition,
+      and loads every radar volume in that window.
     </p>
+    <figure class="shot">
+      <img src="img/radpast-section.png" alt="RadEcho's RadPast section showing a date of 06/30/2022, a start time of 1:00 PM, an end time of 4:00 PM, and a PDT badge, with the Frames selector under Display greyed out and the status line reading 25 frames.">
+      <figcaption>The RadPast section — date, local start/end time, and the station's timezone badge.</figcaption>
+    </figure>
     <p>
       A local time range is capped at three hours per load — long enough to cover a real event without asking
       the server to render an unbounded number of volumes in one request. A date picked with no start or end
       time still works the old way: RadEcho shows the tail end of that day, same as before this feature existed.
+      The Frames selector under Display only means something in that mode — once a real time range is set, it
+      determines the frame count on its own, so the selector greys out rather than showing a number that no
+      longer applies.
     </p>
     <p>
       Every setting — station, date, local start and end time — is captured in the page's URL. A link built from
